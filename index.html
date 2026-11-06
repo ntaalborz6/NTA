@@ -201,6 +201,7 @@
   .tabs button { flex: 1 0 auto; padding: 0 12px; white-space: nowrap; }
   .svc.cust > .chk { flex: 1; }
   a.pb { display: grid; place-items: center; text-decoration: none; }
+  a.pb:not([data-ready]) { opacity: .5; pointer-events: none; }
   select { width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 10px 12px; min-height: 48px; }
   .qrbox { display: grid; justify-items: center; gap: 8px; margin: 14px 0; }
   .qrbox canvas { width: 100%; max-width: 240px; height: auto; background: #fff; border-radius: 10px; image-rendering: pixelated; }
@@ -271,8 +272,8 @@
         <legend>آموزش تنظیمات و کار با پنل</legend>
         <p style="margin:8px 0 12px">راهنمای PDF شامل نحوه‌ی تنظیمات و کار با پنل کولر است. می‌توانید آن را ببینید یا روی گوشی ذخیره کنید.</p>
         <div class="pbtns">
-          <a class="pb" id="guideOpen" href="guide.pdf" target="_blank" rel="noopener">مشاهده PDF</a>
-          <a class="pb" id="guideDl" href="guide.pdf" download>دانلود PDF</a>
+          <a class="pb" id="guideOpen" href="#" target="_blank" rel="noopener">مشاهده PDF</a>
+          <a class="pb" id="guideDl" href="#" target="_blank" rel="noopener">دانلود PDF</a>
         </div>
         <div class="hint" id="guideHint"></div>
       </fieldset>
@@ -2326,9 +2327,18 @@ module.exports = QRCode;
       if (!validNC($('cNC').value)) bad('cNC', 'کد ملی معتبر نیست');
       if (ok) {
         cStep(2);
-        fetch('guide.pdf', { method: 'HEAD' }).then(r => { if (!r.ok) $('guideHint').textContent = 'فایل آموزش هنوز بارگذاری نشده است.'; }).catch(() => {});
+        loadGuide();
       }
     });
+    function loadGuide() {
+      const o = $('guideOpen'), d = $('guideDl'), h = $('guideHint');
+      if (o.dataset.ready) return;
+      h.textContent = 'در حال بارگذاری آموزش…';
+      post({ action: 'getGuide' }).then(r => {
+        if (!r.ok) { h.textContent = r.error || 'فایل آموزش هنوز بارگذاری نشده است.'; return; }
+        o.href = r.view; d.href = r.download; o.dataset.ready = '1'; d.dataset.ready = '1'; h.textContent = '';
+      }).catch(() => { h.textContent = 'ارتباط با سرور برقرار نشد'; });
+    }
     $('c2Next').addEventListener('click', () => cStep(3));
     $('c3Send').addEventListener('click', () => {
       cSay(''); ['stProduct', 'stInstaller'].forEach(clearErr);
