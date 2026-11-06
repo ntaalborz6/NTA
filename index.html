@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ثبت نصب کولر</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b7a85">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef3f4;
+    --surface: #ffffff;
+    --ink: #14282b;
+    --muted: #5d7377;
+    --line: #cfdcde;
+    --accent: #0b7a85;
+    --accent-ink: #ffffff;
+    --accent-soft: #dcf0f2;
+    --danger: #b3261e;
+    --ok: #1b7a3d;
+    --radius: 10px;
+    --accent2: #c76a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1b1d;
+      --surface: #172629;
+      --ink: #e6f1f2;
+      --muted: #93adb1;
+      --line: #2b4246;
+      --accent: #3cc3cf;
+      --accent-ink: #062226;
+      --accent-soft: #1b3a3e;
+      --danger: #ff8a80;
+      --ok: #6fd98f;
+      --accent2: #ffb454;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+    font-size: 16px; line-height: 1.7;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px 120px; }
+  header { padding: 28px 0 14px; }
+  h1 { margin: 0; font-size: 26px; font-weight: 800; }
+  header p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+
+  fieldset { border: 0; padding: 0; margin: 0 0 22px; }
+  legend {
+    font-weight: 700; font-size: 15px; padding: 0 0 8px; margin-bottom: 4px;
+    border-bottom: 2px solid var(--accent); width: 100%;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .full { grid-column: 1 / -1; }
+  label.f { display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  input[type=text], input[type=tel], input[type=password], textarea {
+    width: 100%; font: inherit; color: var(--ink); background: var(--surface);
+    border: 1.5px solid var(--line); border-radius: var(--radius);
+    padding: 11px 12px; min-height: 48px;
+  }
+  textarea { min-height: 84px; resize: vertical; }
+  input:focus, textarea:focus, button:focus-visible, .opt input:focus-visible + span, .photo:focus-within {
+    outline: 3px solid var(--accent); outline-offset: 1px;
+  }
+  input.num { direction: ltr; text-align: right; letter-spacing: .5px; }
+  .err { color: var(--danger); font-size: 13px; min-height: 0; margin-top: 3px; }
+  .invalid { border-color: var(--danger) !important; }
+
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { position: relative; }
+  .opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .opt span {
+    display: block; min-width: 76px; text-align: center; padding: 10px 14px;
+    border: 1.5px solid var(--line); border-radius: var(--radius);
+    background: var(--surface); font-weight: 500;
+  }
+  .opt input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  .opt input:disabled + span { opacity: .35; text-decoration: line-through; }
+  .opt input:disabled { cursor: not-allowed; }
+  .hint { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  .photos { display: grid; gap: 12px; }
+  .photo {
+    display: flex; align-items: center; gap: 12px; background: var(--surface);
+    border: 1.5px dashed var(--line); border-radius: var(--radius); padding: 10px; cursor: pointer;
+  }
+  .photo.has { border-style: solid; border-color: var(--accent); }
+  .photo.invalid { border-color: var(--danger); }
+  .photo input { display: none; }
+  .thumb {
+    width: 72px; height: 72px; flex: none; border-radius: 8px; background: var(--accent-soft);
+    background-size: cover; background-position: center; display: grid; place-items: center;
+    color: var(--accent); font-size: 28px;
+  }
+  .photo { cursor: default; }
+  .photo b { display: block; font-size: 15px; }
+  .photo small { color: var(--muted); font-size: 13px; }
+  .pinfo { flex: 1; min-width: 0; }
+  .pbtns { display: flex; gap: 8px; margin-top: 8px; }
+  .pb {
+    flex: 1; min-height: 44px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+    background: transparent; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 8px;
+  }
+  .checks { display: grid; gap: 8px; }
+  .svc .sub { margin-top: 6px; display: grid; gap: 8px; }
+  .svc .sub.two { grid-template-columns: 1fr 1fr; }
+  .svc.cust { display: flex; gap: 8px; align-items: stretch; }
+  .svc.cust > div { flex: 1; min-width: 0; }
+  .svc.cust .rm { flex: none; min-width: 48px; font: inherit; font-size: 18px; cursor: pointer;
+    color: var(--danger); background: transparent; border: 1.5px solid var(--danger); border-radius: var(--radius); }
+  .addrow { display: flex; gap: 8px; margin-top: 10px; }
+  .addrow input { flex: 1; }
+  .addrow .sec { flex: none; padding: 0 16px; }
+  .chk { position: relative; display: block; }
+  .chk input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .chk span {
+    display: flex; align-items: center; gap: 10px; padding: 11px 12px; min-height: 48px;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius); font-weight: 500;
+  }
+  .chk span::before {
+    content: ''; width: 22px; height: 22px; flex: none; border-radius: 6px;
+    border: 2px solid var(--line); background: var(--surface); display: grid; place-items: center;
+    color: var(--accent-ink); font-size: 15px; font-weight: 800;
+  }
+  .chk input:checked + span { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+  .chk input:checked + span::before { content: '✓'; background: var(--accent); border-color: var(--accent); }
+  .chk input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 1px; }
+
+  .bar {
+    position: fixed; inset: auto 0 0 0; background: var(--surface);
+    border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .bar .in { max-width: 560px; margin: 0 auto; }
+  button.go {
+    width: 100%; min-height: 52px; font: inherit; font-weight: 700; font-size: 17px;
+    background: var(--accent); color: var(--accent-ink); border: 0; border-radius: var(--radius); cursor: pointer;
+  }
+  button.go:disabled { opacity: .6; cursor: wait; }
+  .status { text-align: center; font-size: 14px; margin-bottom: 8px; min-height: 0; }
+  .status.bad { color: var(--danger); }
+
+  .done { text-align: center; padding: 60px 0; }
+  .done .tick { font-size: 56px; color: var(--ok); }
+  .done h2 { margin: 6px 0; }
+  .done button { margin-top: 18px; }
+  details.chg { margin: 8px 0 24px; background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 0 14px; }
+  details.chg summary { cursor: pointer; padding: 14px 0; font-weight: 700; font-size: 15px; }
+  details.chg .body { padding: 0 0 14px; display: grid; gap: 10px; }
+  button.sec {
+    min-height: 46px; font: inherit; font-weight: 700; background: transparent; color: var(--accent);
+    border: 1.5px solid var(--accent); border-radius: var(--radius); cursor: pointer;
+  }
+  button.sec:disabled { opacity: .6; cursor: wait; }
+  .msg { font-size: 14px; min-height: 0; }
+  .msg.bad { color: var(--danger); } .msg.good { color: var(--ok); }
+  [hidden] { display: none !important; }
+
+  .tabs { display:flex; gap:6px; margin:0 0 18px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:4px; }
+  .tabs button { flex:1; min-height:44px; font:inherit; font-weight:500; border:0; border-radius:8px; background:transparent; color:var(--muted); cursor:pointer; }
+  .tabs button.on { background:var(--accent); color:var(--accent-ink); font-weight:700; }
+  .tabs button { font-size:14px; padding:0 2px; }
+  .totalbox { display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding:14px; background:var(--accent-soft); border:1.5px solid var(--accent); border-radius:var(--radius); }
+  .totalbox small { display:block; color:var(--muted); font-size:13px; }
+  .totalbox strong { font-size:20px; }
+  .calcard { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:12px; }
+  .ch { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .ch button { font:inherit; min-height:40px; padding:0 12px; border:1.5px solid var(--line); background:transparent; color:var(--ink); border-radius:8px; cursor:pointer; }
+  .cg { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .wd { text-align:center; font-size:13px; color:var(--muted); padding:4px 0; }
+  .d { min-height:46px; font:inherit; border:1.5px solid transparent; border-radius:8px; background:transparent; color:var(--ink); cursor:pointer; padding:0; line-height:1.15; }
+  .d small { display:block; font-size:11px; font-weight:500; }
+  .d.c1 { background:var(--accent-soft); border-color:var(--accent); font-weight:700; }
+  .d.c2 { background:var(--accent); color:var(--accent-ink); font-weight:800; }
+  .d.tod { border-style:dashed; border-color:var(--ink); }
+  .d.sel { box-shadow:0 0 0 3px var(--ink); }
+  .tot { text-align:center; color:var(--muted); font-size:13px; margin-top:8px; }
+  .legend { font-size:13px; color:var(--muted); margin:10px 0; }
+  .sw { display:inline-block; width:14px; height:14px; border-radius:4px; margin:0 0 -2px 4px; background:var(--accent-soft); border:1.5px solid var(--accent); }
+  .sw.two { background:var(--accent); margin-right:14px; }
+  #dayList h3 { margin:14px 0 6px; font-size:16px; }
+  .it { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 12px; margin-bottom:8px; display:grid; gap:2px; }
+  .it small, .muted { color:var(--muted); }
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:flex-end; justify-content:center; z-index:20; }
+  .modal .sheet { width:100%; max-width:560px; background:var(--bg); border-radius:14px 14px 0 0; padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px)); }
+  .modal .row { display:flex; gap:8px; margin-top:10px; } .modal .row button { flex:1; }
+  .urow { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); }
+  .urow button { font:inherit; color:var(--danger); background:transparent; border:1.5px solid var(--danger); border-radius:8px; min-height:38px; padding:0 12px; cursor:pointer; }
+  .opt-line { display:flex; align-items:center; gap:8px; font-size:14px; }
+  .opt-line input { width:20px; height:20px; }
+  .tabs { overflow-x: auto; }
+  .tabs button { flex: 1 0 auto; padding: 0 12px; white-space: nowrap; }
+  .svc.cust > .chk { flex: 1; }
+  a.pb { display: grid; place-items: center; text-decoration: none; }
+  select { width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 10px 12px; min-height: 48px; }
+  .qrbox { display: grid; justify-items: center; gap: 8px; margin: 14px 0; }
+  .qrbox canvas { width: 100%; max-width: 240px; height: auto; background: #fff; border-radius: 10px; image-rendering: pixelated; }
+  .steps { display: flex; gap: 6px; margin: 0 0 18px; }
+  .steps span { flex: 1; text-align: center; font-size: 13px; padding: 8px 4px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+  .steps span.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  .rate { margin-bottom: 18px; }
+  .stars { display: flex; gap: 6px; margin-top: 4px; }
+  .stars.invalid { outline: 2px solid var(--danger); border-radius: 10px; }
+  .stars button { flex: 1; min-height: 54px; font: inherit; font-size: 28px; line-height: 1; cursor: pointer; color: var(--line); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; }
+  .stars button.on { color: var(--accent2); border-color: var(--accent2); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 6px; text-align: center; }
+  .stat b { display: block; font-size: 22px; }
+  .stat small { color: var(--muted); font-size: 12px; }
+  .lg { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin: 0 0 3px 6px; vertical-align: middle; }
+  .up { color: var(--ok); } .down { color: var(--danger); }
+  .starsline { color: var(--accent2); letter-spacing: 1px; }
+  .cmt { white-space: pre-wrap; }
+  .opt .x { position: relative; z-index: 2; margin-right: 8px; font-style: normal; opacity: .7; padding: 0 4px; }
+  .svc .sub.three { grid-template-columns: 1fr 1fr; }
+  .svc .sub.three > :first-child { grid-column: 1 / -1; }
+  .stat b.money { font-size: 15px; }
+  details summary { cursor: pointer; font-weight: 700; min-height: 36px; display: flex; align-items: center; }
+  details .row { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>ثبت نصب کولر</h1>
+    <p>مشخصات مشتری، دستگاه و عکس‌های نصب</p>
+    <button type="button" class="sec" id="installBtn" hidden style="margin-top:10px;padding:0 16px">نصب برنامه روی این دستگاه</button>
+  </header>
+
+  <section id="login">
+    <fieldset>
+      <legend>ورود</legend>
+      <div class="grid">
+        <div class="full"><label class="f" for="lu">نام کاربری</label>
+          <input type="text" id="lu" class="num" autocomplete="username" autocapitalize="none"></div>
+        <div class="full"><label class="f" for="lp">رمز</label>
+          <input type="password" id="lp" class="num" autocomplete="current-password"></div>
+      </div>
+      <div class="msg bad" id="lmsg" style="margin:8px 0"></div>
+      <button type="button" class="go" id="loginBtn">ورود</button>
+    </fieldset>
+  </section>
+
+  <div id="cust" hidden>
+    <div class="steps" id="cSteps"><span>۱ مشخصات</span><span>۲ آموزش</span><span>۳ نظرسنجی</span></div>
+
+    <section id="c1">
+      <fieldset>
+        <legend>مشخصات شما</legend>
+        <div class="grid">
+          <div><label class="f" for="cFirst">نام</label><input type="text" id="cFirst" autocomplete="given-name"><div class="err" data-for="cFirst"></div></div>
+          <div><label class="f" for="cLast">نام خانوادگی</label><input type="text" id="cLast" autocomplete="family-name"><div class="err" data-for="cLast"></div></div>
+          <div><label class="f" for="cPhone">شماره تماس</label><input type="tel" id="cPhone" class="num" inputmode="numeric" maxlength="11" placeholder="09123456789"><div class="err" data-for="cPhone"></div></div>
+          <div><label class="f" for="cNC">کد ملی</label><input type="tel" id="cNC" class="num" inputmode="numeric" maxlength="10"><div class="err" data-for="cNC"></div></div>
+        </div>
+      </fieldset>
+      <button type="button" class="go" id="c1Next">مرحله بعد</button>
+    </section>
+
+    <section id="c2" hidden>
+      <fieldset>
+        <legend>آموزش تنظیمات و کار با پنل</legend>
+        <p style="margin:8px 0 12px">راهنمای PDF شامل نحوه‌ی تنظیمات و کار با پنل کولر است. می‌توانید آن را ببینید یا روی گوشی ذخیره کنید.</p>
+        <div class="pbtns">
+          <a class="pb" id="guideOpen" href="guide.pdf" target="_blank" rel="noopener">مشاهده PDF</a>
+          <a class="pb" id="guideDl" href="guide.pdf" download>دانلود PDF</a>
+        </div>
+        <div class="hint" id="guideHint"></div>
+      </fieldset>
+      <button type="button" class="go" id="c2Next">ادامه به نظرسنجی</button>
+    </section>
+
+    <section id="c3" hidden>
+      <fieldset>
+        <legend>نظرسنجی</legend>
+        <div class="rate">
+          <span class="f" style="display:block;font-size:14px;font-weight:500">میزان رضایت شما از محصول</span>
+          <div class="stars" id="stProduct"></div>
+          <div class="hint" id="stProduct_t"></div>
+          <div class="err" data-for="stProduct"></div>
+        </div>
+        <div class="rate">
+          <span class="f" style="display:block;font-size:14px;font-weight:500">میزان رضایت شما از کارشناس نصب و راه‌اندازی</span>
+          <div class="stars" id="stInstaller"></div>
+          <div class="hint" id="stInstaller_t"></div>
+          <div class="err" data-for="stInstaller"></div>
+        </div>
+        <label class="f" for="cComment">نظر یا پیشنهاد شما (اختیاری)</label>
+        <textarea id="cComment"></textarea>
+      </fieldset>
+      <div class="status" id="cStatus"></div>
+      <button type="button" class="go" id="c3Send">ثبت نظر</button>
+    </section>
+
+    <section class="done" id="c4" hidden>
+      <div class="tick">✓</div>
+      <h2>سپاس از شما</h2>
+      <p style="color:var(--muted)">مشخصات و نظر شما ثبت شد.</p>
+    </section>
+  </div>
+
+  <div id="app" hidden>
+  <nav class="tabs">
+    <button type="button" id="t_form">ثبت نصب</button>
+    <button type="button" id="t_fee">صدور فاکتور</button>
+    <button type="button" id="t_search">جستجو</button>
+    <button type="button" id="t_cal">تقویم</button>
+    <button type="button" id="t_analysis" hidden>آنالیز</button>
+    <button type="button" id="t_survey" hidden>نظرسنجی</button>
+    <button type="button" id="t_acc">حساب</button>
+  </nav>
+  <div id="v_form">
+
+  <form id="form" novalidate autocomplete="off">
+    <fieldset>
+      <legend>مشخصات مراجعه</legend>
+      <div class="grid">
+        <div class="full">
+          <label class="f" for="receiptNo">شماره پذیرش</label>
+          <input type="text" id="receiptNo" class="num" placeholder="مثلاً 14050210-01">
+          <div class="err" data-for="receiptNo"></div>
+        </div>
+        <div class="full">
+          <span class="f" style="display:block;font-size:14px;font-weight:500;margin-bottom:4px">نوع خدمت</span>
+          <div class="opts" id="typeOpts"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>مشخصات خریدار</legend>
+      <div class="grid">
+        <div>
+          <label class="f" for="firstName">نام</label>
+          <input type="text" id="firstName" autocomplete="given-name">
+          <div class="err" data-for="firstName"></div>
+        </div>
+        <div>
+          <label class="f" for="lastName">نام خانوادگی</label>
+          <input type="text" id="lastName" autocomplete="family-name">
+          <div class="err" data-for="lastName"></div>
+        </div>
+        <div>
+          <label class="f" for="phone">شماره تماس</label>
+          <input type="tel" id="phone" class="num" inputmode="numeric" maxlength="11" placeholder="09123456789">
+          <div class="err" data-for="phone"></div>
+        </div>
+        <div>
+          <label class="f" for="nationalCode">کد ملی</label>
+          <input type="tel" id="nationalCode" class="num" inputmode="numeric" maxlength="10">
+          <div class="err" data-for="nationalCode"></div>
+        </div>
+        <div>
+          <label class="f" for="serialNo">شماره سریال کولر</label>
+          <input type="text" id="serialNo" class="num" placeholder="روی پلاک دستگاه" autocomplete="off">
+          <div class="err" data-for="serialNo"></div>
+        </div>
+        <div class="full">
+          <label class="f" for="address">آدرس</label>
+          <textarea id="address"></textarea>
+          <div class="err" data-for="address"></div>
+        </div>
+        <div class="full">
+          <span class="f" style="display:block;font-size:14px;font-weight:500;margin-bottom:4px">کاربری مشتری</span>
+          <div class="opts" id="useOpts"></div>
+          <div class="addrow">
+            <input type="text" id="newUse" placeholder="کاربری جدید">
+            <button type="button" class="sec" id="addUse">افزودن</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>مشخصات نصب و دستگاه</legend>
+      <div class="grid">
+        <div class="full">
+          <label class="f" for="installDate">تاریخ نصب (شمسی)</label>
+          <input type="text" id="installDate" class="num" readonly placeholder="برای انتخاب تاریخ بزنید" style="cursor:pointer">
+          <div class="err" data-for="installDate"></div>
+        </div>
+        <div class="full">
+          <span class="f" style="display:block;font-size:14px;font-weight:500;margin-bottom:4px">ظرفیت</span>
+          <div class="opts" id="capOpts"></div>
+          <div class="err" data-for="capacity"></div>
+        </div>
+        <div class="full" id="modelBox">
+          <span class="f" style="display:block;font-size:14px;font-weight:500;margin-bottom:4px">مدل</span>
+          <div class="opts" id="modelOpts"></div>
+          <div class="hint" id="modelHint" hidden>مدل‌های کم‌رنگ برای این ظرفیت وجود ندارند.</div>
+          <div class="err" data-for="model"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>عیب به اظهار مشتری و توضیحات</legend>
+      <div class="grid">
+        <div class="full">
+          <label class="f" for="complaint">عیب به اظهار مشتری</label>
+          <textarea id="complaint" placeholder="مشتری چه مشکلی گفته است؟"></textarea>
+        </div>
+        <div class="full">
+          <label class="f" for="notes">توضیحات</label>
+          <textarea id="notes" placeholder="توضیحات تکمیلی (اختیاری)"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>همکار نصب</legend>
+      <div class="checks" id="helpers"></div>
+      <div class="addrow">
+        <input type="text" id="newHelper" placeholder="نام شاگرد جدید">
+        <button type="button" class="sec" id="addHelper">افزودن</button>
+      </div>
+      <div class="hint">اگر هیچ‌کس را انتخاب نکنید، «تنها» ثبت می‌شود.</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>عکس‌ها</legend>
+      <div class="photos" id="photos"></div>
+    </fieldset>
+  </form>
+
+  <section class="done" id="done" hidden>
+    <div class="tick">✓</div>
+    <h2>ثبت شد</h2>
+    <p id="doneMsg" style="color:var(--muted)"></p>
+    <div class="qrbox" id="qrDoneBox" hidden>
+      <canvas id="qrDone"></canvas>
+      <div class="hint">مشتری این کد را اسکن کند تا مشخصات و نظرسنجی را ثبت کند.</div>
+    </div>
+    <button class="go" id="again" type="button">ثبت نصب جدید</button>
+  </section>
+  </div>
+
+  <div id="v_cal" hidden>
+    <div class="calcard" id="calBox"></div>
+    <div class="legend"><i class="sw"></i>یک نصب <i class="sw two"></i>دو نصب یا بیشتر</div>
+    <div id="dayList"></div>
+  </div>
+
+  <div id="v_fee" hidden>
+    <fieldset>
+      <legend>اجرت و لوازم مصرفی</legend>
+      <div class="checks" id="services"></div>
+      <div class="addrow">
+        <input type="text" id="newSvc" placeholder="گزینه جدید (مثلاً لوله مسی)">
+        <button type="button" class="sec" id="addSvc">افزودن</button>
+      </div>
+      <div class="hint">گزینه‌های اضافه‌شده روی همین دستگاه ذخیره می‌شوند.</div>
+      <div class="totalbox">
+        <div><b>جمع کل</b><small id="svcCount"></small></div>
+        <strong id="svcTotal">۰ تومان</strong>
+      </div>
+      <label class="f" for="paid" style="margin-top:14px">مبلغ واریزی مشتری (تومان)</label>
+      <input type="tel" id="paid" class="num" inputmode="numeric" placeholder="اگر تخفیف داده‌اید، مبلغ واقعی را بنویسید">
+      <div class="hint" id="paidDiff"></div>
+    </fieldset>
+  </div>
+
+  <div id="v_analysis" hidden>
+    <fieldset>
+      <legend>بازه‌ی زمانی</legend>
+      <select id="anRange">
+        <option value="cur">ماه جاری</option>
+        <option value="prev">ماه قبل</option>
+        <option value="year">سال جاری</option>
+        <option value="all">همه</option>
+      </select>
+      <div class="hint" id="anHint"></div>
+    </fieldset>
+    <div class="stats">
+      <div class="stat"><b id="anIns">—</b><small>نصب</small></div>
+      <div class="stat"><b id="anRep">—</b><small>تعمیر</small></div>
+      <div class="stat"><b id="anSvc">—</b><small>سرویس</small></div>
+    </div>
+    <div class="stats" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><b class="money" id="anTotal">—</b><small>جمع کل فاکتورها</small></div>
+      <div class="stat"><b class="money" id="anPaid">—</b><small>جمع واریزی مشتریان</small></div>
+    </div>
+    <fieldset>
+      <legend>سود خالص (فقط از اجرت)</legend>
+      <div class="it"><span>اجرت نصب: <b id="anLabor">—</b></span>
+        <span>ایاب و ذهاب: <b id="anTravel">—</b></span>
+        <span>تخفیف‌ها (کسر می‌شود): <b id="anDisc">—</b></span></div>
+      <div class="totalbox">
+        <div><b>سود خالص</b><small>اجرت + ایاب و ذهاب − تخفیف‌ها</small></div>
+        <strong id="anNet">—</strong>
+      </div>
+      <div class="hint" id="anGoods"></div>
+    </fieldset>
+    <fieldset>
+      <legend>همکاران نصب</legend>
+      <div id="anHelpers"></div>
+    </fieldset>
+  </div>
+
+  <div id="v_survey" hidden>
+    <div class="stats">
+      <div class="stat"><b id="svAvgP">—</b><small>میانگین رضایت از محصول</small></div>
+      <div class="stat"><b id="svAvgQ">—</b><small>میانگین رضایت از کارشناس</small></div>
+      <div class="stat"><b id="svCount">—</b><small>تعداد نظرات</small></div>
+    </div>
+    <fieldset>
+      <legend>روند ماهانه</legend>
+      <div class="legend"><i class="lg" style="background:var(--accent)"></i>محصول <i class="lg" style="background:var(--accent2);margin-right:14px"></i>کارشناس</div>
+      <div id="svChart"></div>
+      <div id="svMonths"></div>
+    </fieldset>
+    <fieldset>
+      <legend>نظرات مشتریان</legend>
+      <select id="svFilter">
+        <option value="all">همه</option>
+        <option value="text">فقط دارای نظر</option>
+        <option value="low">امتیاز پایین (۱ و ۲)</option>
+      </select>
+      <div id="svList" style="margin-top:10px"></div>
+    </fieldset>
+  </div>
+
+  <div id="v_search" hidden>
+    <fieldset>
+      <legend>جستجوی مشتری</legend>
+      <label class="f" for="q">نام، شماره تماس، آدرس، کد ملی یا تاریخ</label>
+      <input type="text" id="q" placeholder="مثلاً 09123456789 یا 1405/02/10" autocomplete="off">
+      <div class="hint" id="qHint"></div>
+    </fieldset>
+    <div id="qList"></div>
+  </div>
+
+  <div id="v_acc" hidden>
+    <p>وارد شده: <b id="who"></b> <span id="roleTxt" style="color:var(--muted)"></span></p>
+    <fieldset>
+      <legend>تغییر رمز</legend>
+      <div class="grid">
+        <div class="full"><label class="f" for="pwOld">رمز فعلی</label><input type="password" id="pwOld" class="num"></div>
+        <div class="full"><label class="f" for="pwNew">رمز جدید (حداقل ۴ کاراکتر)</label><input type="password" id="pwNew" class="num"></div>
+        <div class="full"><label class="f" for="pwNew2">تکرار رمز جدید</label><input type="password" id="pwNew2" class="num"></div>
+      </div>
+      <div class="msg" id="pwMsg" style="margin:8px 0"></div>
+      <button type="button" class="sec" id="pwBtn" style="width:100%">ذخیره رمز جدید</button>
+    </fieldset>
+    <fieldset id="adminBox" hidden>
+      <legend>مدیریت کاربران</legend>
+      <div class="grid">
+        <div><label class="f" for="nuName">نام کاربری</label><input type="text" id="nuName" class="num" autocapitalize="none"></div>
+        <div><label class="f" for="nuPass">رمز</label><input type="text" id="nuPass" class="num"></div>
+        <div class="full"><label class="opt-line"><input type="checkbox" id="nuAdmin"> دسترسی مدیر (ساخت و حذف کاربر)</label></div>
+      </div>
+      <div class="msg" id="nuMsg" style="margin:8px 0"></div>
+      <button type="button" class="sec" id="nuBtn" style="width:100%">ایجاد کاربر</button>
+      <div id="userList" style="margin-top:14px"></div>
+    </fieldset>
+    <fieldset>
+      <legend>QR code مشتری</legend>
+      <p class="hint" style="margin-top:8px">مشتری با اسکن این کد، مشخصات خود را ثبت می‌کند، راهنمای PDF را می‌بیند و نظرسنجی را پر می‌کند.</p>
+      <div class="qrbox"><canvas id="qrAcc"></canvas></div>
+      <div class="hint" id="qrAccUrl" dir="ltr" style="word-break:break-all;text-align:center"></div>
+      <div class="pbtns" id="qrBtns">
+        <button type="button" class="pb" id="qrDl">دانلود تصویر QR</button>
+        <button type="button" class="pb" id="qrCopy">کپی لینک</button>
+      </div>
+      <div class="msg" id="qrMsg"></div>
+    </fieldset>
+    <button type="button" class="sec" id="logoutBtn" style="width:100%">خروج از حساب</button>
+  </div>
+  </div>
+</div>
+
+<div class="modal" id="pick" hidden>
+  <div class="sheet">
+    <div class="calcard" id="pickBox"></div>
+    <div class="row"><button type="button" class="sec" id="pickToday">امروز</button><button type="button" class="sec" id="pickClose">بستن</button></div>
+  </div>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <div class="in">
+    <div class="status" id="status"></div>
+    <button class="go" id="submit" type="button">ثبت اطلاعات</button>
+  </div>
+</div>
+
+<script>
+/* QR code generator — Copyright (c) 2009 Kazuhiko Arase, MIT license (http://www.opensource.org/licenses/mit-license.php) */
+var QRCodeLib = (function () {
+  var defs = {}, mods = {};
+  function req(n) { n = n.replace('./', ''); if (!mods[n]) { var m = { exports: {} }; defs[n](m, m.exports, req); mods[n] = m.exports; } return mods[n]; }
+  defs['QRMode'] = function (module, exports, require) {
+module.exports = {
+    MODE_NUMBER :       1 << 0,
+    MODE_ALPHA_NUM :    1 << 1,
+    MODE_8BIT_BYTE :    1 << 2,
+    MODE_KANJI :        1 << 3
+};
+  };
+  defs['QRErrorCorrectLevel'] = function (module, exports, require) {
+module.exports = {
+	L : 1,
+	M : 0,
+	Q : 3,
+	H : 2
+};
+  };
+  defs['QRMaskPattern'] = function (module, exports, require) {
+module.exports = {
+	PATTERN000 : 0,
+	PATTERN001 : 1,
+	PATTERN010 : 2,
+	PATTERN011 : 3,
+	PATTERN100 : 4,
+	PATTERN101 : 5,
+	PATTERN110 : 6,
+	PATTERN111 : 7
+};
+  };
+  defs['QRMath'] = function (module, exports, require) {
+var QRMath = {
+	glog : function(n) {
+		if (n < 1) {
+			throw new Error("glog(" + n + ")");
+		}
+		return QRMath.LOG_TABLE[n];
+	},
+	gexp : function(n) {
+		while (n < 0) {
+			n += 255;
+		}
+		while (n >= 256) {
+			n -= 255;
+		}
+		return QRMath.EXP_TABLE[n];
+	},
+	EXP_TABLE : new Array(256),
+	LOG_TABLE : new Array(256)
+};
+for (var i = 0; i < 8; i++) {
+	QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+	QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+		^ QRMath.EXP_TABLE[i - 5]
+		^ QRMath.EXP_TABLE[i - 6]
+		^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+	QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+module.exports = QRMath;
+  };
+  defs['QRPolynomial'] = function (module, exports, require) {
+var QRMath = require('./QRMath');
+function QRPolynomial(num, shift) {
+	if (num.length === undefined) {
+		throw new Error(num.length + "/" + shift);
+	}
+	var offset = 0;
+	while (offset < num.length && num[offset] === 0) {
+		offset++;
+	}
+	this.num = new Array(num.length - offset + shift);
+	for (var i = 0; i < num.length - offset; i++) {
+		this.num[i] = num[i + offset];
+	}
+}
+QRPolynomial.prototype = {
+	get : function(index) {
+		return this.num[index];
+	},
+	getLength : function() {
+		return this.num.length;
+	},
+	multiply : function(e) {
+		var num = new Array(this.getLength() + e.getLength() - 1);
+		for (var i = 0; i < this.getLength(); i++) {
+			for (var j = 0; j < e.getLength(); j++) {
+				num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+			}
+		}
+		return new QRPolynomial(num, 0);
+	},
+	mod : function(e) {
+		if (this.getLength() - e.getLength() < 0) {
+			return this;
+		}
+		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+		var num = new Array(this.getLength() );
+		for (var i = 0; i < this.getLength(); i++) {
+			num[i] = this.get(i);
+		}
+		for (var x = 0; x < e.getLength(); x++) {
+			num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+		}
+		// recursive call
+		return new QRPolynomial(num, 0).mod(e);
+	}
+};
+module.exports = QRPolynomial;
+  };
+  defs['QRBitBuffer'] = function (module, exports, require) {
+function QRBitBuffer() {
+	this.buffer = [];
+	this.length = 0;
+}
+QRBitBuffer.prototype = {
+	get : function(index) {
+		var bufIndex = Math.floor(index / 8);
+		return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+	},
+	put : function(num, length) {
+		for (var i = 0; i < length; i++) {
+			this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+		}
+	},
+	getLengthInBits : function() {
+		return this.length;
+	},
+	putBit : function(bit) {
+		var bufIndex = Math.floor(this.length / 8);
+		if (this.buffer.length <= bufIndex) {
+			this.buffer.push(0);
+		}
+		if (bit) {
+			this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+		}
+		this.length++;
+	}
+};
+module.exports = QRBitBuffer;
+  };
+  defs['QR8bitByte'] = function (module, exports, require) {
+var QRMode = require('./QRMode');
+function QR8bitByte(data) {
+	this.mode = QRMode.MODE_8BIT_BYTE;
+	this.data = data;
+}
+QR8bitByte.prototype = {
+	getLength : function() {
+		return this.data.length;
+	},
+	write : function(buffer) {
+		for (var i = 0; i < this.data.length; i++) {
+			// not JIS ...
+			buffer.put(this.data.charCodeAt(i), 8);
+		}
+	}
+};
+module.exports = QR8bitByte;
+  };
+  defs['QRRSBlock'] = function (module, exports, require) {
+var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+function QRRSBlock(totalCount, dataCount) {
+	this.totalCount = totalCount;
+	this.dataCount  = dataCount;
+}
+QRRSBlock.RS_BLOCK_TABLE = [
+	// L
+	// M
+	// Q
+	// H
+	// 1
+	[1, 26, 19],
+	[1, 26, 16],
+	[1, 26, 13],
+	[1, 26, 9],
+	// 2
+	[1, 44, 34],
+	[1, 44, 28],
+	[1, 44, 22],
+	[1, 44, 16],
+	// 3
+	[1, 70, 55],
+	[1, 70, 44],
+	[2, 35, 17],
+	[2, 35, 13],
+	// 4		
+	[1, 100, 80],
+	[2, 50, 32],
+	[2, 50, 24],
+	[4, 25, 9],
+	// 5
+	[1, 134, 108],
+	[2, 67, 43],
+	[2, 33, 15, 2, 34, 16],
+	[2, 33, 11, 2, 34, 12],
+	// 6
+	[2, 86, 68],
+	[4, 43, 27],
+	[4, 43, 19],
+	[4, 43, 15],
+	// 7		
+	[2, 98, 78],
+	[4, 49, 31],
+	[2, 32, 14, 4, 33, 15],
+	[4, 39, 13, 1, 40, 14],
+	// 8
+	[2, 121, 97],
+	[2, 60, 38, 2, 61, 39],
+	[4, 40, 18, 2, 41, 19],
+	[4, 40, 14, 2, 41, 15],
+	// 9
+	[2, 146, 116],
+	[3, 58, 36, 2, 59, 37],
+	[4, 36, 16, 4, 37, 17],
+	[4, 36, 12, 4, 37, 13],
+	// 10		
+	[2, 86, 68, 2, 87, 69],
+	[4, 69, 43, 1, 70, 44],
+	[6, 43, 19, 2, 44, 20],
+	[6, 43, 15, 2, 44, 16],
+	// 11
+	[4, 101, 81],
+	[1, 80, 50, 4, 81, 51],
+	[4, 50, 22, 4, 51, 23],
+	[3, 36, 12, 8, 37, 13],
+	// 12
+	[2, 116, 92, 2, 117, 93],
+	[6, 58, 36, 2, 59, 37],
+	[4, 46, 20, 6, 47, 21],
+	[7, 42, 14, 4, 43, 15],
+	// 13
+	[4, 133, 107],
+	[8, 59, 37, 1, 60, 38],
+	[8, 44, 20, 4, 45, 21],
+	[12, 33, 11, 4, 34, 12],
+	// 14
+	[3, 145, 115, 1, 146, 116],
+	[4, 64, 40, 5, 65, 41],
+	[11, 36, 16, 5, 37, 17],
+	[11, 36, 12, 5, 37, 13],
+	// 15
+	[5, 109, 87, 1, 110, 88],
+	[5, 65, 41, 5, 66, 42],
+	[5, 54, 24, 7, 55, 25],
+	[11, 36, 12],
+	// 16
+	[5, 122, 98, 1, 123, 99],
+	[7, 73, 45, 3, 74, 46],
+	[15, 43, 19, 2, 44, 20],
+	[3, 45, 15, 13, 46, 16],
+	// 17
+	[1, 135, 107, 5, 136, 108],
+	[10, 74, 46, 1, 75, 47],
+	[1, 50, 22, 15, 51, 23],
+	[2, 42, 14, 17, 43, 15],
+	// 18
+	[5, 150, 120, 1, 151, 121],
+	[9, 69, 43, 4, 70, 44],
+	[17, 50, 22, 1, 51, 23],
+	[2, 42, 14, 19, 43, 15],
+	// 19
+	[3, 141, 113, 4, 142, 114],
+	[3, 70, 44, 11, 71, 45],
+	[17, 47, 21, 4, 48, 22],
+	[9, 39, 13, 16, 40, 14],
+	// 20
+	[3, 135, 107, 5, 136, 108],
+	[3, 67, 41, 13, 68, 42],
+	[15, 54, 24, 5, 55, 25],
+	[15, 43, 15, 10, 44, 16],
+	// 21
+	[4, 144, 116, 4, 145, 117],
+	[17, 68, 42],
+	[17, 50, 22, 6, 51, 23],
+	[19, 46, 16, 6, 47, 17],
+	// 22
+	[2, 139, 111, 7, 140, 112],
+	[17, 74, 46],
+	[7, 54, 24, 16, 55, 25],
+	[34, 37, 13],
+	// 23
+	[4, 151, 121, 5, 152, 122],
+	[4, 75, 47, 14, 76, 48],
+	[11, 54, 24, 14, 55, 25],
+	[16, 45, 15, 14, 46, 16],
+	// 24
+	[6, 147, 117, 4, 148, 118],
+	[6, 73, 45, 14, 74, 46],
+	[11, 54, 24, 16, 55, 25],
+	[30, 46, 16, 2, 47, 17],
+	// 25
+	[8, 132, 106, 4, 133, 107],
+	[8, 75, 47, 13, 76, 48],
+	[7, 54, 24, 22, 55, 25],
+	[22, 45, 15, 13, 46, 16],
+	// 26
+	[10, 142, 114, 2, 143, 115],
+	[19, 74, 46, 4, 75, 47],
+	[28, 50, 22, 6, 51, 23],
+	[33, 46, 16, 4, 47, 17],
+	// 27
+	[8, 152, 122, 4, 153, 123],
+	[22, 73, 45, 3, 74, 46],
+	[8, 53, 23, 26, 54, 24],
+	[12, 45, 15, 28, 46, 16],
+	// 28
+	[3, 147, 117, 10, 148, 118],
+	[3, 73, 45, 23, 74, 46],
+	[4, 54, 24, 31, 55, 25],
+	[11, 45, 15, 31, 46, 16],
+	// 29
+	[7, 146, 116, 7, 147, 117],
+	[21, 73, 45, 7, 74, 46],
+	[1, 53, 23, 37, 54, 24],
+	[19, 45, 15, 26, 46, 16],
+	// 30
+	[5, 145, 115, 10, 146, 116],
+	[19, 75, 47, 10, 76, 48],
+	[15, 54, 24, 25, 55, 25],
+	[23, 45, 15, 25, 46, 16],
+	// 31
+	[13, 145, 115, 3, 146, 116],
+	[2, 74, 46, 29, 75, 47],
+	[42, 54, 24, 1, 55, 25],
+	[23, 45, 15, 28, 46, 16],
+	// 32
+	[17, 145, 115],
+	[10, 74, 46, 23, 75, 47],
+	[10, 54, 24, 35, 55, 25],
+	[19, 45, 15, 35, 46, 16],
+	// 33
+	[17, 145, 115, 1, 146, 116],
+	[14, 74, 46, 21, 75, 47],
+	[29, 54, 24, 19, 55, 25],
+	[11, 45, 15, 46, 46, 16],
+	// 34
+	[13, 145, 115, 6, 146, 116],
+	[14, 74, 46, 23, 75, 47],
+	[44, 54, 24, 7, 55, 25],
+	[59, 46, 16, 1, 47, 17],
+	// 35
+	[12, 151, 121, 7, 152, 122],
+	[12, 75, 47, 26, 76, 48],
+	[39, 54, 24, 14, 55, 25],
+	[22, 45, 15, 41, 46, 16],
+	// 36
+	[6, 151, 121, 14, 152, 122],
+	[6, 75, 47, 34, 76, 48],
+	[46, 54, 24, 10, 55, 25],
+	[2, 45, 15, 64, 46, 16],
+	// 37
+	[17, 152, 122, 4, 153, 123],
+	[29, 74, 46, 14, 75, 47],
+	[49, 54, 24, 10, 55, 25],
+	[24, 45, 15, 46, 46, 16],
+	// 38
+	[4, 152, 122, 18, 153, 123],
+	[13, 74, 46, 32, 75, 47],
+	[48, 54, 24, 14, 55, 25],
+	[42, 45, 15, 32, 46, 16],
+	// 39
+	[20, 147, 117, 4, 148, 118],
+	[40, 75, 47, 7, 76, 48],
+	[43, 54, 24, 22, 55, 25],
+	[10, 45, 15, 67, 46, 16],
+	// 40
+	[19, 148, 118, 6, 149, 119],
+	[18, 75, 47, 31, 76, 48],
+	[34, 54, 24, 34, 55, 25],
+	[20, 45, 15, 61, 46, 16]
+];
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+	if (rsBlock === undefined) {
+		throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+	}
+	var length = rsBlock.length / 3;
+	var list = [];
+	for (var i = 0; i < length; i++) {
+		var count = rsBlock[i * 3 + 0];
+		var totalCount = rsBlock[i * 3 + 1];
+		var dataCount  = rsBlock[i * 3 + 2];
+		for (var j = 0; j < count; j++) {
+			list.push(new QRRSBlock(totalCount, dataCount) );	
+		}
+	}
+	return list;
+};
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+	switch(errorCorrectLevel) {
+	case QRErrorCorrectLevel.L :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+	case QRErrorCorrectLevel.M :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+	case QRErrorCorrectLevel.Q :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+	case QRErrorCorrectLevel.H :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+	default :
+		return undefined;
+	}
+};
+module.exports = QRRSBlock;
+  };
+  defs['QRUtil'] = function (module, exports, require) {
+var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+var QRUtil = {
+    PATTERN_POSITION_TABLE : [
+        [],
+        [6, 18],
+        [6, 22],
+        [6, 26],
+        [6, 30],
+        [6, 34],
+        [6, 22, 38],
+        [6, 24, 42],
+        [6, 26, 46],
+        [6, 28, 50],
+        [6, 30, 54],        
+        [6, 32, 58],
+        [6, 34, 62],
+        [6, 26, 46, 66],
+        [6, 26, 48, 70],
+        [6, 26, 50, 74],
+        [6, 30, 54, 78],
+        [6, 30, 56, 82],
+        [6, 30, 58, 86],
+        [6, 34, 62, 90],
+        [6, 28, 50, 72, 94],
+        [6, 26, 50, 74, 98],
+        [6, 30, 54, 78, 102],
+        [6, 28, 54, 80, 106],
+        [6, 32, 58, 84, 110],
+        [6, 30, 58, 86, 114],
+        [6, 34, 62, 90, 118],
+        [6, 26, 50, 74, 98, 122],
+        [6, 30, 54, 78, 102, 126],
+        [6, 26, 52, 78, 104, 130],
+        [6, 30, 56, 82, 108, 134],
+        [6, 34, 60, 86, 112, 138],
+        [6, 30, 58, 86, 114, 142],
+        [6, 34, 62, 90, 118, 146],
+        [6, 30, 54, 78, 102, 126, 150],
+        [6, 24, 50, 76, 102, 128, 154],
+        [6, 28, 54, 80, 106, 132, 158],
+        [6, 32, 58, 84, 110, 136, 162],
+        [6, 26, 54, 82, 110, 138, 166],
+        [6, 30, 58, 86, 114, 142, 170]
+    ],
+    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+    getBCHTypeInfo : function(data) {
+        var d = data << 10;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );    
+        }
+        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+    },
+    getBCHTypeNumber : function(data) {
+        var d = data << 12;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );    
+        }
+        return (data << 12) | d;
+    },
+    getBCHDigit : function(data) {
+        var digit = 0;
+        while (data !== 0) {
+            digit++;
+            data >>>= 1;
+        }
+        return digit;
+    },
+    getPatternPosition : function(typeNumber) {
+        return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+    getMask : function(maskPattern, i, j) {
+        switch (maskPattern) {
+        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+        default :
+            throw new Error("bad maskPattern:" + maskPattern);
+        }
+    },
+    getErrorCorrectPolynomial : function(errorCorrectLength) {
+        var a = new QRPolynomial([1], 0);
+        for (var i = 0; i < errorCorrectLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+        }
+        return a;
+    },
+    getLengthInBits : function(mode, type) {
+        if (1 <= type && type < 10) {
+            // 1 - 9
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 10;
+            case QRMode.MODE_ALPHA_NUM  : return 9;
+            case QRMode.MODE_8BIT_BYTE  : return 8;
+            case QRMode.MODE_KANJI      : return 8;
+            default :
+                throw new Error("mode:" + mode);
+            }
+        } else if (type < 27) {
+            // 10 - 26
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 12;
+            case QRMode.MODE_ALPHA_NUM  : return 11;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 10;
+            default :
+                throw new Error("mode:" + mode);
+            }
+        } else if (type < 41) {
+            // 27 - 40
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 14;
+            case QRMode.MODE_ALPHA_NUM  : return 13;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 12;
+            default :
+                throw new Error("mode:" + mode);
+            }
+        } else {
+            throw new Error("type:" + type);
+        }
+    },
+    getLostPoint : function(qrCode) {
+        var moduleCount = qrCode.getModuleCount();
+        var lostPoint = 0;
+        var row = 0; 
+        var col = 0;
+        // LEVEL1
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount; col++) {
+                var sameCount = 0;
+                var dark = qrCode.isDark(row, col);
+                for (var r = -1; r <= 1; r++) {
+                    if (row + r < 0 || moduleCount <= row + r) {
+                        continue;
+                    }
+                    for (var c = -1; c <= 1; c++) {
+                        if (col + c < 0 || moduleCount <= col + c) {
+                            continue;
+                        }
+                        if (r === 0 && c === 0) {
+                            continue;
+                        }
+                        if (dark === qrCode.isDark(row + r, col + c) ) {
+                            sameCount++;
+                        }
+                    }
+                }
+                if (sameCount > 5) {
+                    lostPoint += (3 + sameCount - 5);
+                }
+            }
+        }
+        // LEVEL2
+        for (row = 0; row < moduleCount - 1; row++) {
+            for (col = 0; col < moduleCount - 1; col++) {
+                var count = 0;
+                if (qrCode.isDark(row,     col    ) ) count++;
+                if (qrCode.isDark(row + 1, col    ) ) count++;
+                if (qrCode.isDark(row,     col + 1) ) count++;
+                if (qrCode.isDark(row + 1, col + 1) ) count++;
+                if (count === 0 || count === 4) {
+                    lostPoint += 3;
+                }
+            }
+        }
+        // LEVEL3
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount - 6; col++) {
+                if (qrCode.isDark(row, col) && 
+                        !qrCode.isDark(row, col + 1) && 
+                         qrCode.isDark(row, col + 2) && 
+                         qrCode.isDark(row, col + 3) && 
+                         qrCode.isDark(row, col + 4) && 
+                        !qrCode.isDark(row, col + 5) && 
+                         qrCode.isDark(row, col + 6) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount - 6; row++) {
+                if (qrCode.isDark(row, col) &&
+                        !qrCode.isDark(row + 1, col) &&
+                         qrCode.isDark(row + 2, col) &&
+                         qrCode.isDark(row + 3, col) &&
+                         qrCode.isDark(row + 4, col) &&
+                        !qrCode.isDark(row + 5, col) &&
+                         qrCode.isDark(row + 6, col) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+        // LEVEL4
+        var darkCount = 0;
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount; row++) {
+                if (qrCode.isDark(row, col) ) {
+                    darkCount++;
+                }
+            }
+        }
+        var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+        lostPoint += ratio * 10;
+        return lostPoint;       
+    }
+};
+module.exports = QRUtil;
+  };
+  defs['index'] = function (module, exports, require) {
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+function QRCode(typeNumber, errorCorrectLevel) {
+	this.typeNumber = typeNumber;
+	this.errorCorrectLevel = errorCorrectLevel;
+	this.modules = null;
+	this.moduleCount = 0;
+	this.dataCache = null;
+	this.dataList = [];
+}
+QRCode.prototype = {
+	addData : function(data) {
+		var newData = new QR8bitByte(data);
+		this.dataList.push(newData);
+		this.dataCache = null;
+	},
+	isDark : function(row, col) {
+		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+			throw new Error(row + "," + col);
+		}
+		return this.modules[row][col];
+	},
+	getModuleCount : function() {
+		return this.moduleCount;
+	},
+	make : function() {
+		// Calculate automatically typeNumber if provided is < 1
+		if (this.typeNumber < 1 ){
+			var typeNumber = 1;
+			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+				var buffer = new QRBitBuffer();
+				var totalDataCount = 0;
+				for (var i = 0; i < rsBlocks.length; i++) {
+					totalDataCount += rsBlocks[i].dataCount;
+				}
+				for (var x = 0; x < this.dataList.length; x++) {
+					var data = this.dataList[x];
+					buffer.put(data.mode, 4);
+					buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+					data.write(buffer);
+				}
+				if (buffer.getLengthInBits() <= totalDataCount * 8)
+					break;
+			}
+			this.typeNumber = typeNumber;
+		}
+		this.makeImpl(false, this.getBestMaskPattern() );
+	},
+	makeImpl : function(test, maskPattern) {
+		this.moduleCount = this.typeNumber * 4 + 17;
+		this.modules = new Array(this.moduleCount);
+		for (var row = 0; row < this.moduleCount; row++) {
+			this.modules[row] = new Array(this.moduleCount);
+			for (var col = 0; col < this.moduleCount; col++) {
+				this.modules[row][col] = null;//(col + row) % 3;
+			}
+		}
+		this.setupPositionProbePattern(0, 0);
+		this.setupPositionProbePattern(this.moduleCount - 7, 0);
+		this.setupPositionProbePattern(0, this.moduleCount - 7);
+		this.setupPositionAdjustPattern();
+		this.setupTimingPattern();
+		this.setupTypeInfo(test, maskPattern);
+		if (this.typeNumber >= 7) {
+			this.setupTypeNumber(test);
+		}
+		if (this.dataCache === null) {
+			this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+		}
+		this.mapData(this.dataCache, maskPattern);
+	},
+	setupPositionProbePattern : function(row, col)  {
+		for (var r = -1; r <= 7; r++) {
+			if (row + r <= -1 || this.moduleCount <= row + r) continue;
+			for (var c = -1; c <= 7; c++) {
+				if (col + c <= -1 || this.moduleCount <= col + c) continue;
+				if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) || 
+                     (0 <= c && c <= 6 && (r === 0 || r === 6) ) || 
+                     (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+					this.modules[row + r][col + c] = true;
+				} else {
+					this.modules[row + r][col + c] = false;
+				}
+			}		
+		}		
+	},
+	getBestMaskPattern : function() {
+		var minLostPoint = 0;
+		var pattern = 0;
+		for (var i = 0; i < 8; i++) {
+			this.makeImpl(true, i);
+			var lostPoint = QRUtil.getLostPoint(this);
+			if (i === 0 || minLostPoint >  lostPoint) {
+				minLostPoint = lostPoint;
+				pattern = i;
+			}
+		}
+		return pattern;
+	},
+	createMovieClip : function(target_mc, instance_name, depth) {
+		var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+		var cs = 1;
+		this.make();
+		for (var row = 0; row < this.modules.length; row++) {
+			var y = row * cs;
+			for (var col = 0; col < this.modules[row].length; col++) {
+				var x = col * cs;
+				var dark = this.modules[row][col];
+				if (dark) {
+					qr_mc.beginFill(0, 100);
+					qr_mc.moveTo(x, y);
+					qr_mc.lineTo(x + cs, y);
+					qr_mc.lineTo(x + cs, y + cs);
+					qr_mc.lineTo(x, y + cs);
+					qr_mc.endFill();
+				}
+			}
+		}
+		return qr_mc;
+	},
+	setupTimingPattern : function() {
+		for (var r = 8; r < this.moduleCount - 8; r++) {
+			if (this.modules[r][6] !== null) {
+				continue;
+			}
+			this.modules[r][6] = (r % 2 === 0);
+		}
+		for (var c = 8; c < this.moduleCount - 8; c++) {
+			if (this.modules[6][c] !== null) {
+				continue;
+			}
+			this.modules[6][c] = (c % 2 === 0);
+		}
+	},
+	setupPositionAdjustPattern : function() {
+		var pos = QRUtil.getPatternPosition(this.typeNumber);
+		for (var i = 0; i < pos.length; i++) {
+			for (var j = 0; j < pos.length; j++) {
+				var row = pos[i];
+				var col = pos[j];
+				if (this.modules[row][col] !== null) {
+					continue;
+				}
+				for (var r = -2; r <= 2; r++) {
+					for (var c = -2; c <= 2; c++) {
+						if (Math.abs(r) === 2 || 
+                            Math.abs(c) === 2 ||
+                            (r === 0 && c === 0) ) {
+							this.modules[row + r][col + c] = true;
+						} else {
+							this.modules[row + r][col + c] = false;
+						}
+					}
+				}
+			}
+		}
+	},
+	setupTypeNumber : function(test) {
+		var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+        var mod;
+		for (var i = 0; i < 18; i++) {
+			mod = (!test && ( (bits >> i) & 1) === 1);
+			this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+		}
+		for (var x = 0; x < 18; x++) {
+			mod = (!test && ( (bits >> x) & 1) === 1);
+			this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+		}
+	},
+	setupTypeInfo : function(test, maskPattern) {
+		var data = (this.errorCorrectLevel << 3) | maskPattern;
+		var bits = QRUtil.getBCHTypeInfo(data);
+        var mod;
+		// vertical		
+		for (var v = 0; v < 15; v++) {
+			mod = (!test && ( (bits >> v) & 1) === 1);
+			if (v < 6) {
+				this.modules[v][8] = mod;
+			} else if (v < 8) {
+				this.modules[v + 1][8] = mod;
+			} else {
+				this.modules[this.moduleCount - 15 + v][8] = mod;
+			}
+		}
+		// horizontal
+		for (var h = 0; h < 15; h++) {
+			mod = (!test && ( (bits >> h) & 1) === 1);
+			if (h < 8) {
+				this.modules[8][this.moduleCount - h - 1] = mod;
+			} else if (h < 9) {
+				this.modules[8][15 - h - 1 + 1] = mod;
+			} else {
+				this.modules[8][15 - h - 1] = mod;
+			}
+		}
+		// fixed module
+		this.modules[this.moduleCount - 8][8] = (!test);
+	},
+	mapData : function(data, maskPattern) {
+		var inc = -1;
+		var row = this.moduleCount - 1;
+		var bitIndex = 7;
+		var byteIndex = 0;
+		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+			if (col === 6) col--;
+			while (true) {
+				for (var c = 0; c < 2; c++) {
+					if (this.modules[row][col - c] === null) {
+						var dark = false;
+						if (byteIndex < data.length) {
+							dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+						}
+						var mask = QRUtil.getMask(maskPattern, row, col - c);
+						if (mask) {
+							dark = !dark;
+						}
+						this.modules[row][col - c] = dark;
+						bitIndex--;
+						if (bitIndex === -1) {
+							byteIndex++;
+							bitIndex = 7;
+						}
+					}
+				}
+				row += inc;
+				if (row < 0 || this.moduleCount <= row) {
+					row -= inc;
+					inc = -inc;
+					break;
+				}
+			}
+		}
+	}
+};
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+	var buffer = new QRBitBuffer();
+	for (var i = 0; i < dataList.length; i++) {
+		var data = dataList[i];
+		buffer.put(data.mode, 4);
+		buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+		data.write(buffer);
+	}
+	// calc num max data.
+	var totalDataCount = 0;
+	for (var x = 0; x < rsBlocks.length; x++) {
+		totalDataCount += rsBlocks[x].dataCount;
+	}
+	if (buffer.getLengthInBits() > totalDataCount * 8) {
+		throw new Error("code length overflow. (" + 
+            buffer.getLengthInBits() + 
+            ">" +  
+            totalDataCount * 8 + 
+            ")");
+	}
+	// end code
+	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+		buffer.put(0, 4);
+	}
+	// padding
+	while (buffer.getLengthInBits() % 8 !== 0) {
+		buffer.putBit(false);
+	}
+	// padding
+	while (true) {
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD0, 8);
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD1, 8);
+	}
+	return QRCode.createBytes(buffer, rsBlocks);
+};
+QRCode.createBytes = function(buffer, rsBlocks) {
+	var offset = 0;
+	var maxDcCount = 0;
+	var maxEcCount = 0;
+	var dcdata = new Array(rsBlocks.length);
+	var ecdata = new Array(rsBlocks.length);
+	for (var r = 0; r < rsBlocks.length; r++) {
+		var dcCount = rsBlocks[r].dataCount;
+		var ecCount = rsBlocks[r].totalCount - dcCount;
+		maxDcCount = Math.max(maxDcCount, dcCount);
+		maxEcCount = Math.max(maxEcCount, ecCount);
+		dcdata[r] = new Array(dcCount);
+		for (var i = 0; i < dcdata[r].length; i++) {
+			dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+		}
+		offset += dcCount;
+		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+		var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+		var modPoly = rawPoly.mod(rsPoly);
+		ecdata[r] = new Array(rsPoly.getLength() - 1);
+		for (var x = 0; x < ecdata[r].length; x++) {
+            var modIndex = x + modPoly.getLength() - ecdata[r].length;
+			ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+		}
+	}
+	var totalCodeCount = 0;
+	for (var y = 0; y < rsBlocks.length; y++) {
+		totalCodeCount += rsBlocks[y].totalCount;
+	}
+	var data = new Array(totalCodeCount);
+	var index = 0;
+	for (var z = 0; z < maxDcCount; z++) {
+		for (var s = 0; s < rsBlocks.length; s++) {
+			if (z < dcdata[s].length) {
+				data[index++] = dcdata[s][z];
+			}
+		}
+	}
+	for (var xx = 0; xx < maxEcCount; xx++) {
+		for (var t = 0; t < rsBlocks.length; t++) {
+			if (xx < ecdata[t].length) {
+				data[index++] = ecdata[t][xx];
+			}
+		}
+	}
+	return data;
+};
+module.exports = QRCode;
+  };
+  return req('index');
+})();
+</script>
+<script>
+(function () {
+  // آدرس برنامه‌ی Apps Script (بعد از Deploy) را اینجا بگذارید:
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwkeTyybp-fLwUIzd-RItWE-UNlETqSOuZbOKGWX-gkbhIGOZYTxbedDXTQ3WiHY480IA/exec';
+
+  const CAPS = { '6000': ['up','front'], '8000': ['up','front'],
+                 '15000': ['up','front','down'], '18000': ['up','front','down'], '30000': ['up','down'],
+                 'P6000': [], 'P9000': [] };
+  const MODEL_LABEL = { up: 'Up', front: 'Front', down: 'Down' };
+  const isPortable = c => /^P/.test(c || '');
+  const CAP_TAG = { '6000': 'Bc', '8000': 'Bc', '15000': 'Ac', '18000': 'Ac' };
+  const capTxt = c => isPortable(c) ? String(c) : faNum(c) + (CAP_TAG[latin(String(c))] ? ' ' + CAP_TAG[latin(String(c))] : '');
+  const PHOTOS = [
+    { key: 'photoPlate',    title: 'عکس پلاک دستگاه',        sub: 'برچسب مشخصات روی دستگاه' },
+    { key: 'photoOverview', title: 'نمای کلی بعد از نصب',   sub: 'کل دستگاه نصب‌شده' },
+    { key: 'photoWarranty', title: 'برگه گارانتی',           sub: 'کل برگه خوانا باشد' },
+    { key: 'photoInvoice',  title: 'عکس برگه فاکتور',        sub: 'اختیاری', optional: true }
+  ];
+  // آیتم‌های چک‌لیست اجرت و لوازم مصرفی؛ fields: price = قیمت، height = ارتفاع، meters = متراژ
+  const SERVICES = [
+    { name: 'اجرت نصب', fields: ['price'], ph: { price: 'مبلغ اجرت نصب (تومان)' } },
+    { name: 'ایاب و ذهاب', fields: ['price'] },
+    { name: 'تعویض پمپ آب', fields: ['price'] },
+    { name: 'تعویض اینورتر', fields: ['price'] },
+    { name: 'عیب‌یابی', fields: ['price'] },
+    { name: 'تعویض الکتروموتور', fields: ['price'] },
+    { name: 'تعویض فلوتر مکانیکی', fields: ['price'] },
+    { name: 'تنظیم فلوتر مکانیکی', fields: ['price'] },
+    { name: 'چهار پایه', fields: ['height', 'price'] },
+    { name: 'فیلتر', fields: ['price'] },
+    { name: 'شیر کولری برنجی', fields: ['price'] },
+    { name: 'شیر پیسوار', fields: ['price'] },
+    { name: 'برزنت', fields: ['price'] },
+    { name: 'شیلنگ', fields: ['kind', 'meters', 'price'] },
+    { name: 'نوار تفلن', fields: ['price'] },
+    { name: 'نوارچسب', fields: ['price'] },
+    { name: 'کابل برق', fields: ['meters', 'price'] }
+  ];
+  let CUSTOM = [];
+  try { CUSTOM = JSON.parse(localStorage.getItem('customSvc') || '[]') || []; } catch (e) { CUSTOM = []; }
+  function saveCustom() { try { localStorage.setItem('customSvc', JSON.stringify(CUSTOM)); } catch (e) {} }
+  const $ = id => document.getElementById(id);
+  const QS = new URLSearchParams(location.search), CUST = QS.has('c');
+  const CID = QS.get('c') === 'qr' ? '' : (QS.get('c') || '');
+  const state = { capacity: '', model: '', photos: {} };
+
+  /* ---------- ارقام ---------- */
+  function latin(s) {
+    return String(s || '').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+                          .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+  }
+  function faNum(s) { return String(s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+  ['phone','nationalCode','installDate'].forEach(id => {
+    $(id).addEventListener('input', e => { e.target.value = latin(e.target.value).replace(/[^\d/]/g, ''); });
+  });
+
+  /* ---------- تاریخ امروز شمسی ---------- */
+  function todayJalali() {
+    try {
+      const p = new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn', { year:'numeric', month:'2-digit', day:'2-digit' })
+        .formatToParts(new Date()).reduce((a, x) => (a[x.type] = x.value, a), {});
+      return p.year + '/' + p.month + '/' + p.day;
+    } catch (e) { return ''; }
+  }
+  $('installDate').value = todayJalali();
+
+  /* ---------- ظرفیت و مدل ---------- */
+  function renderCaps() {
+    const box = $('capOpts'); box.innerHTML = '';
+    Object.keys(CAPS).forEach(c => {
+      const l = document.createElement('label'); l.className = 'opt';
+      l.innerHTML = '<input type="radio" name="cap" value="' + c + '"><span>' + capTxt(c) + '</span>';
+      l.querySelector('input').addEventListener('change', () => { state.capacity = c; renderModels(); clearErr('capacity'); });
+      box.appendChild(l);
+    });
+  }
+  function renderModels() {
+    const box = $('modelOpts'); box.innerHTML = '';
+    const allowed = CAPS[state.capacity] || [];
+    if (allowed.indexOf(state.model) === -1) state.model = '';
+    ['up','front','down'].forEach(m => {
+      const l = document.createElement('label'); l.className = 'opt';
+      const dis = state.capacity && allowed.indexOf(m) === -1;
+      l.innerHTML = '<input type="radio" name="model" value="' + m + '"' + (dis ? ' disabled' : '') +
+                    (state.model === m ? ' checked' : '') + '><span>' + MODEL_LABEL[m] + '</span>';
+      l.querySelector('input').addEventListener('change', () => { state.model = m; clearErr('model'); });
+      box.appendChild(l);
+    });
+    $('modelBox').hidden = isPortable(state.capacity);
+    $('modelHint').hidden = !(state.capacity && allowed.length && allowed.length < 3);
+  }
+  renderCaps(); renderModels();
+
+  /* ---------- عکس‌ها (فشرده‌سازی قبل از ارسال) ---------- */
+  function compress(file, maxSide, quality) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        let w = img.naturalWidth, h = img.naturalHeight;
+        const k = Math.min(1, maxSide / Math.max(w, h));
+        w = Math.round(w * k); h = Math.round(h * k);
+        const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+        cv.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = cv.toDataURL('image/jpeg', quality);
+        URL.revokeObjectURL(url);
+        resolve({ data: dataUrl.split(',')[1], mime: 'image/jpeg', preview: dataUrl });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('خواندن عکس ممکن نیست')); };
+      img.src = url;
+    });
+  }
+  function renderPhotos() {
+    const box = $('photos'); box.innerHTML = '';
+    PHOTOS.forEach(p => {
+      const l = document.createElement('div'); l.className = 'photo'; l.id = 'ph_' + p.key;
+      l.innerHTML = '<div class="thumb">📷</div>' +
+                    '<div class="pinfo"><b>' + p.title + '</b><small>' + p.sub + '</small>' +
+                    '<div class="pbtns"><button type="button" class="pb cam">📷 دوربین</button>' +
+                    '<button type="button" class="pb gal">🖼 گالری</button></div></div>' +
+                    '<input type="file" accept="image/*" capture="environment" class="ic">' +
+                    '<input type="file" accept="image/*" class="ig">';
+      const ic = l.querySelector('.ic'), ig = l.querySelector('.ig'), th = l.querySelector('.thumb');
+      l.querySelector('.cam').addEventListener('click', () => { ic.value = ''; ic.click(); });
+      l.querySelector('.gal').addEventListener('click', () => { ig.value = ''; ig.click(); });
+      const onPick = async inp => {
+        const f = inp.files && inp.files[0]; if (!f) return;
+        th.textContent = '…';
+        try {
+          const r = await compress(f, 1600, 0.78);
+          state.photos[p.key] = { data: r.data, mime: r.mime };
+          th.textContent = ''; th.style.backgroundImage = 'url(' + r.preview + ')';
+          l.classList.add('has'); l.classList.remove('invalid');
+        } catch (e) { th.textContent = '📷'; setStatus(e.message, true); }
+      };
+      ic.addEventListener('change', () => onPick(ic));
+      ig.addEventListener('change', () => onPick(ig));
+      box.appendChild(l);
+    });
+  }
+  renderPhotos();
+
+  /* ---------- چک‌لیست اجرت و لوازم مصرفی ---------- */
+  const FIELD_PH = { price: 'قیمت (تومان)', height: 'ارتفاع (مثلاً ۸۰ سانتی‌متر)', meters: 'متراژ (متر)' };
+  const num = v => Number(latin(v).replace(/\D/g, '')) || 0;
+  const money = n => faNum(Number(n).toLocaleString('en-US')) + ' تومان';
+  let LAST_TOTAL = 0;
+  function updateTotal() {
+    let t = 0, c = 0;
+    $('services').querySelectorAll('.svc').forEach(d => {
+      if (!d.querySelector('input[type=checkbox]').checked) return;
+      c++; const p = d.querySelector('input[data-f="price"]'); if (p) t += num(p.value);
+    });
+    $('svcTotal').textContent = money(t); LAST_TOTAL = t; updateDiff();
+    $('svcCount').textContent = c ? faNum(c) + ' مورد انتخاب شده' : 'موردی انتخاب نشده';
+  }
+  function renderServices() {
+    const box = $('services'), prev = {};
+    box.querySelectorAll('.svc').forEach(d => {
+      const v = {}; d.querySelectorAll('.sub input, .sub select').forEach(i => { v[i.dataset.f] = i.value; });
+      prev[d.dataset.name] = { on: d.querySelector('input[type=checkbox]').checked, v: v };
+    });
+    box.innerHTML = '';
+    SERVICES.concat(CUSTOM.map(n => ({ name: n, custom: true, fields: ['price'] }))).forEach(s => {
+      const d = document.createElement('div'); d.className = 'svc' + (s.custom ? ' cust' : ''); d.dataset.name = s.name;
+      const l = document.createElement('label'); l.className = 'chk';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = s.name;
+      const sp = document.createElement('span'); sp.textContent = s.name;
+      l.appendChild(cb); l.appendChild(sp);
+      const wrap = document.createElement('div'); wrap.appendChild(l);
+      const sub = document.createElement('div'); sub.className = 'sub' + (s.fields.length > 2 ? ' three' : s.fields.length > 1 ? ' two' : ''); sub.hidden = true;
+      s.fields.forEach(f => {
+        const inp = document.createElement(f === 'kind' ? 'select' : 'input'); inp.dataset.f = f;
+        inp.placeholder = (s.ph && s.ph[f]) || FIELD_PH[f];
+        if (f === 'kind') {
+          ['معمولی', 'پیسواری'].forEach(k => { const o = document.createElement('option'); o.value = o.textContent = k; inp.appendChild(o); });
+        } else if (f === 'price') {
+          inp.type = 'tel'; inp.className = 'num'; inp.setAttribute('inputmode', 'numeric');
+          inp.addEventListener('input', () => {
+            const n = latin(inp.value).replace(/\D/g, '');
+            inp.value = n ? Number(n).toLocaleString('en-US') : ''; updateTotal();
+          });
+        } else if (f === 'meters') {
+          inp.type = 'text'; inp.className = 'num'; inp.setAttribute('inputmode', 'decimal');
+          inp.addEventListener('input', () => { inp.value = latin(inp.value).replace(/[\/٫,]/g, '.').replace(/[^\d.]/g, ''); });
+        } else inp.type = 'text';
+        sub.appendChild(inp);
+      });
+      cb.addEventListener('change', () => { sub.hidden = !cb.checked; if (cb.checked) sub.querySelector('input, select').focus(); updateTotal(); });
+      const p = prev[s.name];
+      if (p) { cb.checked = p.on; sub.hidden = !p.on; sub.querySelectorAll('input, select').forEach(i => { if (p.v[i.dataset.f]) i.value = p.v[i.dataset.f]; }); }
+      wrap.appendChild(sub); d.appendChild(wrap);
+      if (s.custom) {
+        const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'rm'; rm.textContent = '×';
+        rm.setAttribute('aria-label', 'حذف ' + s.name);
+        rm.addEventListener('click', () => { CUSTOM = CUSTOM.filter(x => x !== s.name); saveCustom(); renderServices(); });
+        d.appendChild(rm);
+      }
+      box.appendChild(d);
+    });
+    updateTotal();
+  }
+  renderServices();
+  function addService() {
+    const v = $('newSvc').value.trim(); if (!v) return;
+    const all = SERVICES.map(x => x.name).concat(CUSTOM);
+    if (all.indexOf(v) === -1) { CUSTOM.push(v); saveCustom(); }
+    $('newSvc').value = ''; renderServices();
+    const last = $('services').querySelector('.svc:last-child input[type=checkbox]');
+    if (last && last.value === v) { last.checked = true; last.dispatchEvent(new Event('change')); }
+  }
+  $('addSvc').addEventListener('click', addService);
+  $('newSvc').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addService(); } });
+  function collectServices() {
+    const items = []; let fee = '', height = '', meters = '', total = 0, travel = '', hoseType = '', hoseMeters = '';
+    $('services').querySelectorAll('.svc').forEach(d => {
+      if (!d.querySelector('input[type=checkbox]').checked) return;
+      const name = d.dataset.name, v = {};
+      d.querySelectorAll('.sub input, .sub select').forEach(i => { v[i.dataset.f] = i.value.trim(); });
+      const parts = [], pr = num(v.price || '');
+      if (v.kind) parts.push(v.kind);
+      if (v.height) parts.push('ارتفاع ' + v.height);
+      if (v.meters) parts.push(faNum(v.meters) + ' متر');
+      if (pr) { parts.push(money(pr)); total += pr; }
+      if (name === 'اجرت نصب') fee = pr ? String(pr) : '';
+      if (name === 'چهار پایه') height = v.height || '';
+      if (name === 'کابل برق') meters = v.meters || '';
+      if (name === 'ایاب و ذهاب') travel = pr ? String(pr) : '';
+      if (name === 'شیلنگ') { hoseType = v.kind || ''; hoseMeters = v.meters || ''; }
+      items.push(name + (parts.length ? ' (' + parts.join('، ') + ')' : ''));
+    });
+    return { text: items.join('، '), fee: fee, height: height, meters: meters, total: total, travel: travel, hoseType: hoseType, hoseMeters: hoseMeters };
+  }
+
+  /* ---------- اعتبارسنجی ---------- */
+  function validNC(c) {
+    if (!/^\d{10}$/.test(c) || /^(\d)\1{9}$/.test(c)) return false;
+    let s = 0; for (let i = 0; i < 9; i++) s += +c[i] * (10 - i);
+    const r = s % 11; return r < 2 ? +c[9] === r : +c[9] === 11 - r;
+  }
+  function setErr(k, msg) {
+    const e = document.querySelector('[data-for="' + k + '"]'); if (e) e.textContent = msg;
+    const f = $(k); if (f) f.classList.add('invalid');
+  }
+  function clearErr(k) {
+    const e = document.querySelector('[data-for="' + k + '"]'); if (e) e.textContent = '';
+    const f = $(k); if (f) f.classList.remove('invalid');
+  }
+  function validate() {
+    let first = null;
+    const bad = (k, m) => { setErr(k, m); if (!first) first = $(k) || document.querySelector('[data-for="' + k + '"]'); };
+    ['receiptNo','firstName','lastName','phone','nationalCode','address','installDate','capacity','model'].forEach(clearErr);
+    document.querySelectorAll('.photo').forEach(p => p.classList.remove('invalid'));
+
+    if (!$('receiptNo').value.trim()) bad('receiptNo', 'شماره پذیرش را وارد کنید');
+    if (!$('firstName').value.trim()) bad('firstName', 'نام را وارد کنید');
+    if (!$('lastName').value.trim()) bad('lastName', 'نام خانوادگی را وارد کنید');
+    if (!/^09\d{9}$/.test($('phone').value)) bad('phone', 'شماره ۱۱ رقمی و با ۰۹ شروع شود');
+    if (!validNC($('nationalCode').value)) bad('nationalCode', 'کد ملی معتبر نیست');
+    if (!$('address').value.trim()) bad('address', 'آدرس را وارد کنید');
+    if (!/^\d{4}\/\d{1,2}\/\d{1,2}$/.test($('installDate').value)) bad('installDate', 'مثال: 1405/01/15');
+    if (!state.capacity) bad('capacity', 'ظرفیت را انتخاب کنید');
+    if (!state.model && !isPortable(state.capacity)) bad('model', 'مدل را انتخاب کنید');
+    PHOTOS.forEach(p => {
+      if (!p.optional && !state.photos[p.key]) {
+        $('ph_' + p.key).classList.add('invalid');
+        if (!first) first = $('ph_' + p.key);
+      }
+    });
+    if (first) { if ($('v_form').hidden) showTab('form'); first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return !first;
+  }
+
+  /* ---------- ارسال ---------- */
+  function setStatus(msg, bad) { const s = $('status'); s.textContent = msg || ''; s.classList.toggle('bad', !!bad); }
+
+  $('submit').addEventListener('click', () => {
+    setStatus('');
+    if (!validate()) { setStatus('موارد مشخص‌شده را کامل کنید', true); return; }
+    const btn = $('submit'); btn.disabled = true; btn.textContent = 'در حال ارسال…';
+    setStatus('عکس‌ها در حال آپلود است؛ صفحه را نبندید');
+    const SV = collectServices();
+    const payload = {
+      action: 'saveInstall', token: TOKEN,
+      firstName: $('firstName').value, lastName: $('lastName').value,
+      phone: $('phone').value, nationalCode: $('nationalCode').value,
+      address: $('address').value, installDate: $('installDate').value,
+      capacity: state.capacity, model: state.model,
+      receiptNo: $('receiptNo').value.trim(), serviceType: meta.type, usage: meta.use, helpers: collectHelpers(),
+      paidAmount: String(num($('paid').value) || ''),
+      complaint: $('complaint').value.trim(), notes: $('notes').value.trim(),
+      services: SV.text, installFee: SV.fee, stoolHeight: SV.height, cableMeters: SV.meters, totalPrice: String(SV.total),
+      travelFee: SV.travel, hoseType: SV.hoseType, hoseMeters: SV.hoseMeters, serialNo: $('serialNo').value.trim(),
+      photoPlate: state.photos.photoPlate, photoOverview: state.photos.photoOverview,
+      photoWarranty: state.photos.photoWarranty, photoInvoice: state.photos.photoInvoice
+    };
+    const fail = msg => {
+      btn.disabled = false; btn.textContent = 'ثبت اطلاعات';
+      setStatus(msg + ' — دوباره تلاش کنید', true);
+    };
+    if (API_URL.indexOf('http') !== 0) { fail('آدرس API در فایل تنظیم نشده است'); return; }
+
+    // text/plain باعث می‌شود مرورگر درخواست پیش‌پرواز (CORS preflight) نفرستد
+    post(payload)
+      .then(res => {
+        if (!res.ok) { fail(res.error || 'خطا در ثبت'); return; }
+        btn.disabled = false; btn.textContent = 'ثبت اطلاعات'; setStatus('');
+        $('form').hidden = true; $('bar').hidden = true; $('done').hidden = false; showTab('form');
+        bumpReceipt();
+        $('doneMsg').textContent = 'شناسه ثبت: ' + res.id + ' — شماره پذیرش: ' + payload.receiptNo; showDoneQR(res.id);
+        refreshInstalls();
+        window.scrollTo(0, 0);
+      })
+      .catch(() => fail('ارتباط با سرور برقرار نشد'));
+  });
+
+  $('again').addEventListener('click', () => {
+    $('form').reset(); $('installDate').value = todayJalali();
+    state.capacity = ''; state.model = ''; state.photos = {};
+    meta.type = 'نصب'; meta.use = ''; renderMeta(); $('receiptNo').value = nextReceipt(); renderHelpers();
+    $('paid').value = ''; updateDiff();
+    renderCaps(); renderModels(); renderPhotos(); $('services').innerHTML = ''; renderServices();
+    $('form').hidden = false; $('bar').hidden = false; $('done').hidden = true;
+    window.scrollTo(0, 0);
+  });
+  /* ===== ورود و نشست ===== */
+  let TOKEN = '', USER = '', ROLE = '';
+  function post(body) {
+    return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+      .then(r => r.json()).then(res => { if (!res.ok && res.expired) endSession(); return res; });
+  }
+  function api(action, data) { return post(Object.assign({ action: action, token: TOKEN }, data || {})); }
+  const say = (id, t, cls) => { const e = $(id); e.textContent = t; e.className = 'msg ' + (cls || ''); };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const pad = n => ('0' + n).slice(-2);
+  function normD(s) { const m = latin(s).match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/); return m ? m[1] + '/' + pad(m[2]) + '/' + pad(m[3]) : ''; }
+
+  function endSession() {
+    TOKEN = USER = ROLE = ''; try { localStorage.removeItem('sess'); } catch (e) {}
+    $('login').hidden = false; $('app').hidden = true; $('bar').hidden = true;
+  }
+  function startSession(r) {
+    TOKEN = r.token; USER = r.username; ROLE = r.role;
+    try { localStorage.setItem('sess', JSON.stringify({ t: TOKEN, u: USER, r: ROLE })); } catch (e) {}
+    $('login').hidden = true; $('app').hidden = false;
+    $('who').textContent = USER; $('roleTxt').textContent = ROLE === 'admin' ? '(مدیر)' : '(کاربر)';
+    $('adminBox').hidden = ROLE !== 'admin'; $('t_survey').hidden = ROLE !== 'admin'; $('t_analysis').hidden = ROLE !== 'admin';
+    showTab('form'); refreshInstalls();
+  }
+  function showTab(t) {
+    ['form', 'cal', 'fee', 'search', 'analysis', 'survey', 'acc'].forEach(k => { $('v_' + k).hidden = k !== t; $('t_' + k).classList.toggle('on', k === t); });
+    $('bar').hidden = (t !== 'form' && t !== 'fee') || !$('done').hidden;
+    if (t === 'cal') loadCal();
+    if (t === 'search') loadSearch();
+    if (t === 'analysis' && ROLE === 'admin') loadAnalysis();
+    if (t === 'survey' && ROLE === 'admin') loadSurvey();
+    if (t === 'acc') renderAccQR();
+    if (t === 'acc' && ROLE === 'admin') loadUsers();
+    window.scrollTo(0, 0);
+  }
+  ['form', 'cal', 'fee', 'search', 'analysis', 'survey', 'acc'].forEach(k => $('t_' + k).addEventListener('click', () => showTab(k)));
+
+  function doLogin() {
+    const u = latin($('lu').value.trim()), p = latin($('lp').value);
+    if (!u || !p) { say('lmsg', 'نام کاربری و رمز را وارد کنید', 'bad'); return; }
+    $('loginBtn').disabled = true; say('lmsg', 'در حال ورود…');
+    post({ action: 'login', username: u, password: p }).then(r => {
+      $('loginBtn').disabled = false;
+      if (!r.ok) { say('lmsg', r.error || 'خطا در ورود', 'bad'); return; }
+      $('lp').value = ''; say('lmsg', ''); startSession(r);
+    }).catch(() => { $('loginBtn').disabled = false; say('lmsg', 'ارتباط با سرور برقرار نشد', 'bad'); });
+  }
+  $('loginBtn').addEventListener('click', doLogin);
+  $('lp').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  $('logoutBtn').addEventListener('click', () => { api('logout'); endSession(); });
+
+  /* ===== تقویم شمسی (بر پایه Intl مرورگر) ===== */
+  const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+  const jf = new Intl.DateTimeFormat('en-US-u-ca-persian-nu-latn', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' });
+  function jp(dt) { const p = jf.formatToParts(dt).reduce((a, x) => (a[x.type] = +x.value, a), {}); return { y: p.year, m: p.month, d: p.day }; }
+  function todayJ() { const n = new Date(); return jp(new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate(), 12))); }
+  function jStart(y, m) {
+    let dt = new Date(Date.UTC(y + 621, 2, 21, 12) + Math.round((m - 1) * 30.4) * 864e5);
+    for (let i = 0; i < 60; i++) {
+      const p = jp(dt), diff = (p.y - y) * 372 + (p.m - m) * 31 + (p.d - 1);
+      if (!diff) return dt;
+      dt = new Date(dt.getTime() - Math.sign(diff) * 864e5);
+    }
+    return dt;
+  }
+  function jLen(y, m) { return m <= 6 ? 31 : m <= 11 ? 30 : Math.round((jStart(y + 1, 1) - jStart(y, 12)) / 864e5); }
+
+  function makeCal(box, getMarks, onPick, getSel) {
+    const c = { y: 0, m: 0 };
+    c.go = (y, m) => { if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } c.y = y; c.m = m; draw(); };
+    function draw() {
+      const marks = getMarks(), sel = getSel(), t = todayJ(), tk = t.y + '/' + pad(t.m) + '/' + pad(t.d);
+      const first = (jStart(c.y, c.m).getUTCDay() + 1) % 7, len = jLen(c.y, c.m), pre = c.y + '/' + pad(c.m) + '/';
+      let total = 0;
+      let h = '<div class="ch"><button type="button" data-n="-1">ماه قبل</button><b>' + MONTHS[c.m - 1] + ' ' + faNum(c.y) + '</b><button type="button" data-n="1">ماه بعد</button></div><div class="cg">';
+      ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'].forEach(w => h += '<div class="wd">' + w + '</div>');
+      for (let i = 0; i < first; i++) h += '<div></div>';
+      for (let d = 1; d <= len; d++) {
+        const k = pre + pad(d), n = marks[k] || 0; total += n;
+        h += '<button type="button" class="d' + (n ? (n > 1 ? ' c2' : ' c1') : '') + (k === tk ? ' tod' : '') + (k === sel ? ' sel' : '') +
+             '" data-k="' + k + '">' + faNum(d) + (n ? '<small>' + faNum(n) + '</small>' : '') + '</button>';
+      }
+      box.innerHTML = h + '</div><div class="tot">نصب‌های این ماه: ' + faNum(total) + '</div>';
+      box.querySelectorAll('[data-n]').forEach(b => b.onclick = () => c.go(c.y, c.m + +b.dataset.n));
+      box.querySelectorAll('[data-k]').forEach(b => b.onclick = () => onPick(b.dataset.k));
+    }
+    return c;
+  }
+
+  let INSTALLS = [], MARKS = {}, selDay = '';
+  function refreshInstalls() {
+    return api('getInstalls').then(r => {
+      if (r.ok) { INSTALLS = r.items; MARKS = {}; INSTALLS.forEach(i => { const k = normD(i.date); if (k) MARKS[k] = (MARKS[k] || 0) + 1; }); }
+      return r;
+    }).catch(() => ({ ok: false, error: 'ارتباط با سرور برقرار نشد' }));
+  }
+  const calMain = makeCal($('calBox'), () => MARKS, k => showDay(k), () => selDay);
+  function showDay(k) {
+    selDay = k; calMain.go(calMain.y, calMain.m);
+    const items = INSTALLS.filter(i => normD(i.date) === k);
+    let h = '<h3>' + faNum(k) + '</h3>';
+    if (!items.length) h += '<p class="muted">نصبی در این روز ثبت نشده است.</p>';
+    items.forEach(i => h += '<div class="it"><b>' + esc(i.name) + '</b><span>' + esc(capTxt(i.cap)) + (i.model ? ' — ' + esc(MODEL_LABEL[i.model] || i.model) : '') + '</span><small>ثبت‌کننده: ' + esc(i.by) + '</small></div>');
+    $('dayList').innerHTML = h;
+  }
+  function loadCal() {
+    const t = todayJ(); if (!calMain.y) calMain.go(t.y, t.m);
+    refreshInstalls().then(r => {
+      if (!r.ok) { $('dayList').innerHTML = '<p class="msg bad">' + esc(r.error || 'خطا') + '</p>'; return; }
+      showDay(selDay || t.y + '/' + pad(t.m) + '/' + pad(t.d));
+    });
+  }
+
+  /* ===== سرچ مشتری ===== */
+  function nf(s) { return latin(s == null ? '' : s).replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/[\u200c\u064b-\u065f]/g, '').toLowerCase(); }
+  function fullName(i) { return i.name || ((i.firstName || '') + ' ' + (i.lastName || '')).trim(); }
+  function doSearch() {
+    const q = nf($('q').value).trim(), box = $('qList');
+    const known = INSTALLS.some(i => 'phone' in i || 'nationalCode' in i || 'address' in i || 'receiptNo' in i);
+    $('qHint').textContent = INSTALLS.length && !known ? 'سرور فعلاً شماره، کد ملی و آدرس را برنمی‌گرداند؛ فقط با نام و تاریخ می‌توان جستجو کرد.' : '';
+    if (!q) { box.innerHTML = '<p class="muted">عبارت مورد نظر را بنویسید.</p>'; return; }
+    const toks = q.split(/\s+/).map(t => /^\d{4}\D+\d{1,2}\D+\d{1,2}$/.test(t) ? normD(t) : t);
+    const hits = INSTALLS.filter(i => {
+      const hay = [fullName(i), i.phone, i.nationalCode, i.address, i.receiptNo, i.serialNo, i.serviceType, i.usage, i.helpers, i.date, normD(i.date || '')].map(nf).join(' | ');
+      return toks.every(t => hay.indexOf(t) !== -1);
+    });
+    if (!hits.length) { box.innerHTML = '<p class="muted">مشتری‌ای پیدا نشد.</p>'; return; }
+    box.innerHTML = '<p class="muted">' + faNum(hits.length) + ' نتیجه</p>' + hits.slice(0, 50).map(i => {
+      const ids = [i.phone, i.nationalCode].filter(Boolean).join(' — ');
+      return '<div class="it"><b>' + esc(fullName(i)) + '</b>' +
+        (ids ? '<span style="direction:ltr;text-align:right">' + esc(ids) + '</span>' : '') +
+        (i.receiptNo || i.serviceType ? '<span>' + [i.serviceType ? esc(i.serviceType) : '', i.receiptNo ? 'پذیرش ' + esc(faNum(i.receiptNo)) : ''].filter(Boolean).join(' — ') + '</span>' : '') +
+        (i.address ? '<span>' + esc(i.address) + '</span>' : '') +
+        (i.serialNo ? '<small>سریال: ' + esc(i.serialNo) + '</small>' : '') +
+        (i.usage ? '<small>کاربری: ' + esc(i.usage) + '</small>' : '') +
+        (i.helpers ? '<small>همکار: ' + esc(i.helpers) + '</small>' : '') +
+        '<span>' + esc(faNum(normD(i.date || '') || i.date || '')) + ' — ' + esc(capTxt(i.cap || '')) + ' ' + esc(MODEL_LABEL[i.model] || i.model || '') + '</span>' +
+        (i.services ? '<small>' + esc(i.services) + '</small>' : '') +
+        (i.totalPrice ? '<span>جمع کل: ' + esc(money(num(String(i.totalPrice)))) + '</span>' : '') +
+        (i.paidAmount ? '<span>واریزی: ' + esc(money(num(String(i.paidAmount)))) + '</span>' : '') +
+        '<small>ثبت‌کننده: ' + esc(i.by || '') + '</small></div>';
+    }).join('');
+  }
+  function loadSearch() {
+    $('qList').innerHTML = '<p class="muted">در حال بارگذاری…</p>';
+    refreshInstalls().then(r => {
+      if (!r.ok) { $('qList').innerHTML = '<p class="msg bad">' + esc(r.error || 'خطا') + '</p>'; return; }
+      doSearch();
+    });
+  }
+  $('q').addEventListener('input', doSearch);
+
+  /* ===== انتخاب تاریخ نصب با تقویم ===== */
+  const pickCal = makeCal($('pickBox'), () => MARKS, k => { $('installDate').value = k; clearErr('installDate'); $('pick').hidden = true; }, () => normD($('installDate').value));
+  function openPick(y, m) { pickCal.go(y, m); $('pick').hidden = false; }
+  $('installDate').addEventListener('click', () => { const v = normD($('installDate').value), t = todayJ(); openPick(v ? +v.slice(0, 4) : t.y, v ? +v.slice(5, 7) : t.m); });
+  $('pickToday').addEventListener('click', () => { const t = todayJ(); $('installDate').value = t.y + '/' + pad(t.m) + '/' + pad(t.d); clearErr('installDate'); $('pick').hidden = true; });
+  $('pickClose').addEventListener('click', () => { $('pick').hidden = true; });
+  $('pick').addEventListener('click', e => { if (e.target === $('pick')) $('pick').hidden = true; });
+
+  /* ===== حساب کاربری ===== */
+  function busy(btn, msgId, fn) {
+    btn.disabled = true;
+    fn().then(() => { btn.disabled = false; }).catch(() => { btn.disabled = false; say(msgId, 'ارتباط با سرور برقرار نشد', 'bad'); });
+  }
+  $('pwBtn').addEventListener('click', () => {
+    const o = latin($('pwOld').value), n = latin($('pwNew').value), n2 = latin($('pwNew2').value);
+    if (n.length < 4) { say('pwMsg', 'رمز جدید باید حداقل ۴ کاراکتر باشد', 'bad'); return; }
+    if (n !== n2) { say('pwMsg', 'تکرار رمز یکسان نیست', 'bad'); return; }
+    say('pwMsg', 'در حال ذخیره…');
+    busy($('pwBtn'), 'pwMsg', () => api('changePassword', { oldPassword: o, newPassword: n }).then(r => {
+      if (!r.ok) { say('pwMsg', r.error, 'bad'); return; }
+      ['pwOld', 'pwNew', 'pwNew2'].forEach(i => $(i).value = ''); say('pwMsg', 'رمز تغییر کرد', 'good');
+    }));
+  });
+  $('nuBtn').addEventListener('click', () => {
+    const u = latin($('nuName').value.trim()), p = latin($('nuPass').value.trim());
+    say('nuMsg', 'در حال ایجاد…');
+    busy($('nuBtn'), 'nuMsg', () => api('createUser', { username: u, password: p, admin: $('nuAdmin').checked }).then(r => {
+      if (!r.ok) { say('nuMsg', r.error, 'bad'); return; }
+      $('nuName').value = ''; $('nuPass').value = ''; $('nuAdmin').checked = false;
+      say('nuMsg', 'کاربر ایجاد شد', 'good'); loadUsers();
+    }));
+  });
+  function loadUsers() {
+    api('listUsers').then(r => {
+      if (!r.ok) { $('userList').innerHTML = '<p class="msg bad">' + esc(r.error || '') + '</p>'; return; }
+      $('userList').innerHTML = r.users.map(u => '<div class="urow"><span>' + esc(u.u) + (u.role === 'admin' ? ' <small class="muted">(مدیر)</small>' : '') + '</span>' +
+        (u.u.toLowerCase() === USER.toLowerCase() ? '' : '<button type="button" data-del="' + esc(u.u) + '">حذف</button>') + '</div>').join('');
+      $('userList').querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+        if (!confirm('کاربر «' + b.dataset.del + '» حذف شود؟')) return;
+        api('deleteUser', { username: b.dataset.del }).then(x => { if (!x.ok) say('nuMsg', x.error, 'bad'); loadUsers(); });
+      });
+    });
+  }
+
+  /* ===== نصب به‌صورت برنامه (PWA) ===== */
+  let deferred = null;
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; $('installBtn').hidden = CUST; });
+  $('installBtn').addEventListener('click', () => { if (!deferred) return; deferred.prompt(); deferred.userChoice.then(() => { deferred = null; $('installBtn').hidden = true; }); });
+  window.addEventListener('appinstalled', () => { $('installBtn').hidden = true; });
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+
+  /* ===== شماره پذیرش، نوع خدمت، کاربری، همکار ===== */
+  const TYPES = ['نصب', 'تعمیر', 'سرویس'];
+  const USES = ['مسکونی', 'تجاری', 'اداری', 'صنعتی', 'خدماتی', 'ورزشی', 'سایر'];
+  let CUSTOM_USES = [];
+  try { CUSTOM_USES = JSON.parse(localStorage.getItem('customUse') || '[]') || []; } catch (e) { CUSTOM_USES = []; }
+  function saveUses() { try { localStorage.setItem('customUse', JSON.stringify(CUSTOM_USES)); } catch (e) {} }
+  const meta = { type: 'نصب', use: '' };
+  function rcptDay() { return latin(todayJalali()).replace(/\D/g, ''); }
+  function rcptCount() {
+    try { const o = JSON.parse(localStorage.getItem('rcpt') || 'null'); if (o && o.d === rcptDay()) return o.n; } catch (e) {}
+    return 0;
+  }
+  function nextReceipt() { return rcptDay() + '-' + pad(rcptCount() + 1); }
+  function bumpReceipt() { try { localStorage.setItem('rcpt', JSON.stringify({ d: rcptDay(), n: rcptCount() + 1 })); } catch (e) {} }
+  function renderChips(boxId, list, group, key, onPick) {
+    const box = $(boxId); box.innerHTML = '';
+    list.forEach(v => {
+      const l = document.createElement('label'); l.className = 'opt';
+      const i = document.createElement('input'); i.type = 'radio'; i.name = group; i.value = v; i.checked = meta[key] === v;
+      const sp = document.createElement('span'); sp.textContent = v;
+      i.addEventListener('change', () => { meta[key] = v; if (onPick) onPick(); });
+      l.appendChild(i); l.appendChild(sp); box.appendChild(l);
+    });
+  }
+  function renderUses() {
+    const box = $('useOpts'); box.innerHTML = '';
+    USES.concat(CUSTOM_USES).forEach((v, idx) => {
+      const l = document.createElement('label'); l.className = 'opt';
+      const i = document.createElement('input'); i.type = 'radio'; i.name = 'suse'; i.value = v; i.checked = meta.use === v;
+      const sp = document.createElement('span'); sp.textContent = v;
+      i.addEventListener('change', () => { meta.use = v; });
+      l.appendChild(i); l.appendChild(sp);
+      if (idx >= USES.length) {
+        const x = document.createElement('em'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'حذف ' + v);
+        x.addEventListener('click', ev => {
+          ev.preventDefault(); ev.stopPropagation();
+          CUSTOM_USES = CUSTOM_USES.filter(k => k !== v); saveUses(); if (meta.use === v) meta.use = ''; renderUses();
+        });
+        sp.appendChild(x);
+      }
+      box.appendChild(l);
+    });
+  }
+  function addUse() {
+    const v = $('newUse').value.trim(); if (!v) return;
+    if (USES.concat(CUSTOM_USES).indexOf(v) === -1) { CUSTOM_USES.push(v); saveUses(); }
+    meta.use = v; $('newUse').value = ''; renderUses();
+  }
+  function typeChanged() {
+    const l = document.querySelector('label[for="installDate"]'); if (l) l.textContent = 'تاریخ ' + meta.type + ' (شمسی)';
+  }
+  function renderMeta() {
+    renderChips('typeOpts', TYPES, 'stype', 'type', typeChanged);
+    renderUses();
+    typeChanged();
+  }
+  renderMeta();
+  $('addUse').addEventListener('click', addUse);
+  $('newUse').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addUse(); } });
+  $('serialNo').addEventListener('input', e => { e.target.value = latin(e.target.value).toUpperCase().replace(/[^A-Z0-9\-\/]/g, ''); });
+  $('receiptNo').value = nextReceipt();
+  $('receiptNo').addEventListener('input', e => { e.target.value = latin(e.target.value).replace(/[^\w\-\/]/g, ''); });
+
+  let HELPERS = [];
+  try { HELPERS = JSON.parse(localStorage.getItem('helpers') || '[]') || []; } catch (e) { HELPERS = []; }
+  function saveHelpers() { try { localStorage.setItem('helpers', JSON.stringify(HELPERS)); } catch (e) {} }
+  function renderHelpers() {
+    const box = $('helpers'), prev = {};
+    box.querySelectorAll('input[type=checkbox]').forEach(c => { prev[c.value] = c.checked; });
+    box.innerHTML = '';
+    HELPERS.forEach(name => {
+      const d = document.createElement('div'); d.className = 'svc cust';
+      const wrap = document.createElement('div');
+      const l = document.createElement('label'); l.className = 'chk';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = name; cb.checked = !!prev[name];
+      const sp = document.createElement('span'); sp.textContent = name;
+      l.appendChild(cb); l.appendChild(sp); wrap.appendChild(l); d.appendChild(wrap);
+      const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'rm'; rm.textContent = '×';
+      rm.setAttribute('aria-label', 'حذف ' + name);
+      rm.addEventListener('click', () => { HELPERS = HELPERS.filter(x => x !== name); saveHelpers(); renderHelpers(); });
+      d.appendChild(rm); box.appendChild(d);
+    });
+  }
+  renderHelpers();
+  function addHelper() {
+    const v = $('newHelper').value.trim(); if (!v) return;
+    if (HELPERS.indexOf(v) === -1) { HELPERS.push(v); saveHelpers(); }
+    $('newHelper').value = ''; renderHelpers();
+    Array.prototype.forEach.call($('helpers').querySelectorAll('input[type=checkbox]'), c => { if (c.value === v) c.checked = true; });
+  }
+  $('addHelper').addEventListener('click', addHelper);
+  $('newHelper').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addHelper(); } });
+  function collectHelpers() {
+    const a = Array.prototype.map.call($('helpers').querySelectorAll('input:checked'), i => i.value);
+    return a.length ? a.join('، ') : 'تنها';
+  }
+
+  /* ===== مبلغ واریزی ===== */
+  function updateDiff() {
+    const paid = num($('paid').value), box = $('paidDiff');
+    if (!$('paid').value.trim()) { box.textContent = ''; return; }
+    const d = LAST_TOTAL - paid;
+    box.textContent = d > 0 ? 'کمتر از فاکتور: ' + money(d) + ' (تخفیف یا باقی‌مانده)'
+                    : d < 0 ? 'بیشتر از فاکتور: ' + money(-d) : 'تسویه کامل';
+  }
+  $('paid').addEventListener('input', () => {
+    const n = latin($('paid').value).replace(/\D/g, '');
+    $('paid').value = n ? Number(n).toLocaleString('en-US') : ''; updateDiff();
+  });
+
+  /* ===== آنالیز ===== */
+  function prevMonthKey(k) { let y = +k.slice(0, 4), m = +k.slice(5, 7) - 1; if (m < 1) { y--; m = 12; } return y + '/' + pad(m); }
+  function loadAnalysis() {
+    $('anHint').textContent = 'در حال بارگذاری…';
+    refreshInstalls().then(r => {
+      if (!r.ok) { $('anHint').textContent = r.error || 'خطا'; return; }
+      renderAnalysis();
+    });
+  }
+  function renderAnalysis() {
+    const rg = $('anRange').value, cur = normD(todayJalali()).slice(0, 7), pv = prevMonthKey(cur);
+    const rows = INSTALLS.filter(i => {
+      if (rg === 'all') return true;
+      const d = normD(i.date || ''); if (!d) return false;
+      if (rg === 'cur') return d.slice(0, 7) === cur;
+      if (rg === 'prev') return d.slice(0, 7) === pv;
+      return d.slice(0, 4) === cur.slice(0, 4);
+    });
+    const c = { 'نصب': 0, 'تعمیر': 0, 'سرویس': 0 };
+    let total = 0, paid = 0, labor = 0, travel = 0, disc = 0, noPaid = 0;
+    rows.forEach(i => {
+      const t = i.serviceType || 'نصب'; if (c[t] != null) c[t]++;
+      const tt = num(String(i.totalPrice || '')), hasPaid = String(i.paidAmount || '') !== '', pp = num(String(i.paidAmount || ''));
+      total += tt; labor += num(String(i.installFee || '')); travel += num(String(i.travelFee || ''));
+      if (hasPaid) { paid += pp; if (tt > pp) disc += tt - pp; } else if (tt) noPaid++;
+    });
+    const net = labor + travel - disc;
+    $('anIns').textContent = faNum(c['نصب']); $('anRep').textContent = faNum(c['تعمیر']); $('anSvc').textContent = faNum(c['سرویس']);
+    $('anTotal').textContent = money(total); $('anPaid').textContent = money(paid);
+    $('anLabor').textContent = money(labor); $('anTravel').textContent = money(travel); $('anDisc').textContent = money(disc);
+    $('anNet').textContent = (net < 0 ? '−' : '') + money(Math.abs(net));
+    const goods = Math.max(0, total - labor - travel);
+    $('anGoods').textContent = 'سهم لوازم از فاکتور (پولش برمی‌گردد و جزو سود نیست): ' + money(goods);
+    const known = INSTALLS.some(i => 'totalPrice' in i || 'installFee' in i || 'serviceType' in i);
+    let h = INSTALLS.length && !known ? 'سرور فعلاً مبالغ و نوع خدمت را برنمی‌گرداند؛ ابتدا Apps Script باید آپدیت شود.' : (faNum(rows.length) + ' مراجعه در این بازه');
+    if (noPaid) h += ' — ' + faNum(noPaid) + ' فاکتور مبلغ واریزی ندارند و در تخفیف حساب نشدند';
+    $('anHint').textContent = h;
+    // همکاران: هر کار برای هر شاگرد جدا شمرده می‌شود
+    const by = {}, solo = [];
+    let noInfo = 0;
+    rows.forEach(i => {
+      const raw = String(i.helpers || '').trim();
+      if (!raw) { noInfo++; return; }
+      if (raw === 'تنها') { solo.push(i); return; }
+      raw.split(/[،,]/).map(x => x.trim()).filter(Boolean).forEach(nm => { (by[nm] = by[nm] || []).push(i); });
+    });
+    const rec = i => '<span class="row">' + esc(fullName(i)) + ' — ' + esc(faNum(normD(i.date || '') || i.date || '')) + ' — ' + esc(i.serviceType || 'نصب') + '</span>';
+    const block = (title, list) => '<div class="it"><details><summary>' + esc(title) + ' — ' + faNum(list.length) + ' کار</summary>' + list.map(rec).join('') + '</details></div>';
+    const names = Object.keys(by).sort((a, b) => by[b].length - by[a].length);
+    let hh = names.map(nm => block(nm, by[nm])).join('');
+    if (solo.length) hh += block('تنها', solo);
+    if (!hh) hh = '<p class="muted">' + (rows.length ? 'اطلاعات همکار برای کارهای این بازه ثبت نشده است.' : 'کاری در این بازه نیست.') + '</p>';
+    if (noInfo && hh.indexOf('<details>') !== -1) hh += '<p class="muted">' + faNum(noInfo) + ' کار بدون اطلاعات همکار (قبل از اضافه‌شدن این بخش).</p>';
+    $('anHelpers').innerHTML = hh;
+  }
+  $('anRange').addEventListener('change', renderAnalysis);
+
+  /* ===== QR code ===== */
+  function custUrl(id) {
+    return location.origin + location.pathname + '?c=' + encodeURIComponent(id == null || id === '' ? 'qr' : id);
+  }
+  function drawQR(cv, text) {
+    if (!/^https?:$/.test(location.protocol)) return false;
+    try {
+      const q = new QRCodeLib(-1, 0); q.addData(text); q.make();
+      const n = q.getModuleCount(), quiet = 4, sz = Math.ceil(600 / (n + quiet * 2)), tot = (n + quiet * 2) * sz;
+      cv.width = cv.height = tot;
+      const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, tot, tot); g.fillStyle = '#000';
+      for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) g.fillRect((c + quiet) * sz, (r + quiet) * sz, sz, sz);
+      return true;
+    } catch (e) { return false; }
+  }
+  function showDoneQR(id) { $('qrDoneBox').hidden = !drawQR($('qrDone'), custUrl(id)); }
+  function renderAccQR() {
+    const url = custUrl(''), ok = drawQR($('qrAcc'), url);
+    $('qrAcc').hidden = !ok; $('qrBtns').hidden = !ok;
+    $('qrAccUrl').textContent = ok ? url : 'برای ساخت QR، برنامه باید از روی آدرس اینترنتی (https) باز شود، نه از روی فایل.';
+    $('qrAccUrl').dir = ok ? 'ltr' : 'rtl';
+  }
+  $('qrDl').addEventListener('click', () => {
+    $('qrAcc').toBlob(b => {
+      if (!b) return;
+      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'customer-qr.png';
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+  });
+  $('qrCopy').addEventListener('click', () => {
+    const url = custUrl('');
+    (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(
+      () => say('qrMsg', 'لینک کپی شد', 'good'), () => say('qrMsg', 'کپی نشد؛ لینک را دستی کپی کنید', 'bad'));
+  });
+
+  /* ===== صفحه‌ی مشتری (از طریق QR) ===== */
+  const RATE_TXT = ['', 'خیلی ضعیف', 'ضعیف', 'متوسط', 'خوب', 'عالی'];
+  const rate = { stProduct: 0, stInstaller: 0 };
+  function paintStars(id) {
+    Array.prototype.forEach.call($(id).children, (b, i) => b.classList.toggle('on', i < rate[id]));
+    $(id + '_t').textContent = rate[id] ? faNum(rate[id]) + ' از ۵ — ' + RATE_TXT[rate[id]] : '';
+  }
+  function makeStars(id) {
+    const box = $(id); box.innerHTML = '';
+    for (let v = 1; v <= 5; v++) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = '★';
+      b.setAttribute('aria-label', faNum(v) + ' از ۵');
+      b.addEventListener('click', () => { rate[id] = v; paintStars(id); clearErr(id); });
+      box.appendChild(b);
+    }
+  }
+  function cStep(n) {
+    ['c1', 'c2', 'c3', 'c4'].forEach((k, i) => { $(k).hidden = i + 1 !== n; });
+    Array.prototype.forEach.call($('cSteps').children, (sp, i) => sp.classList.toggle('on', i + 1 === Math.min(n, 3)));
+    $('cSteps').hidden = n === 4;
+    window.scrollTo(0, 0);
+  }
+  function cSay(t, bad) { const e = $('cStatus'); e.textContent = t || ''; e.classList.toggle('bad', !!bad); }
+  function startCustomer() {
+    $('login').hidden = true; $('app').hidden = true; $('bar').hidden = true; $('cust').hidden = false;
+    document.querySelector('header h1').textContent = 'مشخصات و نظرسنجی';
+    document.querySelector('header p').textContent = 'لطفاً مشخصات خود را وارد کنید';
+    $('installBtn').hidden = true;
+    makeStars('stProduct'); makeStars('stInstaller'); cStep(1);
+    ['cPhone', 'cNC'].forEach(id => $(id).addEventListener('input', e => { e.target.value = latin(e.target.value).replace(/\D/g, ''); }));
+    $('c1Next').addEventListener('click', () => {
+      ['cFirst', 'cLast', 'cPhone', 'cNC'].forEach(clearErr);
+      let ok = true; const bad = (k, m) => { setErr(k, m); ok = false; };
+      if (!$('cFirst').value.trim()) bad('cFirst', 'نام را وارد کنید');
+      if (!$('cLast').value.trim()) bad('cLast', 'نام خانوادگی را وارد کنید');
+      if (!/^09\d{9}$/.test($('cPhone').value)) bad('cPhone', 'شماره ۱۱ رقمی و با ۰۹ شروع شود');
+      if (!validNC($('cNC').value)) bad('cNC', 'کد ملی معتبر نیست');
+      if (ok) {
+        cStep(2);
+        fetch('guide.pdf', { method: 'HEAD' }).then(r => { if (!r.ok) $('guideHint').textContent = 'فایل آموزش هنوز بارگذاری نشده است.'; }).catch(() => {});
+      }
+    });
+    $('c2Next').addEventListener('click', () => cStep(3));
+    $('c3Send').addEventListener('click', () => {
+      cSay(''); ['stProduct', 'stInstaller'].forEach(clearErr);
+      let ok = true;
+      if (!rate.stProduct) { setErr('stProduct', 'امتیاز را انتخاب کنید'); ok = false; }
+      if (!rate.stInstaller) { setErr('stInstaller', 'امتیاز را انتخاب کنید'); ok = false; }
+      if (!ok) return;
+      if (API_URL.indexOf('http') !== 0) { cSay('آدرس API در فایل تنظیم نشده است', true); return; }
+      const btn = $('c3Send'); btn.disabled = true; btn.textContent = 'در حال ارسال…';
+      const fail = m => { btn.disabled = false; btn.textContent = 'ثبت نظر'; cSay(m + ' — دوباره تلاش کنید', true); };
+      post({
+        action: 'customerSurvey', installId: CID,
+        firstName: $('cFirst').value.trim(), lastName: $('cLast').value.trim(),
+        phone: $('cPhone').value, nationalCode: $('cNC').value,
+        productRating: rate.stProduct, installerRating: rate.stInstaller,
+        comment: $('cComment').value.trim(), date: todayJalali()
+      }).then(res => {
+        if (!res.ok) { fail(res.error || 'خطا در ثبت'); return; }
+        btn.disabled = false; btn.textContent = 'ثبت نظر'; cStep(4);
+      }).catch(() => fail('ارتباط با سرور برقرار نشد'));
+    });
+  }
+
+  /* ===== نظرسنجی (مدیر): نظرات و روند ===== */
+  let SURVEYS = [];
+  const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+  const f1 = n => faNum(n.toFixed(1)).replace('.', '٫');
+  const rt = v => Math.max(0, Math.min(5, Math.round(+v || 0)));
+  const starTxt = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+  function loadSurvey() {
+    $('svList').innerHTML = '<p class="muted">در حال بارگذاری…</p>';
+    api('getSurveys').then(r => {
+      if (!r.ok) { $('svList').innerHTML = '<p class="msg bad">' + esc(r.error || 'خطا') + '</p>'; return; }
+      SURVEYS = r.items || []; renderSurvey();
+    }).catch(() => { $('svList').innerHTML = '<p class="msg bad">ارتباط با سرور برقرار نشد</p>'; });
+  }
+  function monthRows() {
+    const m = {};
+    SURVEYS.forEach(i => {
+      const k = normD(i.date || '').slice(0, 7); if (!k) return;
+      const o = m[k] || (m[k] = { k: k, p: [], q: [], n: 0 });
+      const p = rt(i.productRating), q = rt(i.installerRating);
+      if (p) o.p.push(p); if (q) o.q.push(q); o.n++;
+    });
+    return Object.keys(m).sort().map(k => m[k]).slice(-8);
+  }
+  function trendSvg(rows) {
+    const W = 340, H = 210, L = 12, R = 24, T = 18, B = 42, n = rows.length;
+    const step = n > 1 ? (W - L - R - 16) / (n - 1) : 0;
+    const X = i => (W - R - 8) - i * step;
+    const Y = v => T + (5 - v) * ((H - T - B) / 4);
+    let g = '';
+    for (let v = 1; v <= 5; v++) {
+      g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" style="stroke:var(--line)"/>' +
+           '<text x="' + (W - R + 6) + '" y="' + (Y(v) + 3) + '" font-size="9" style="fill:var(--muted)">' + faNum(v) + '</text>';
+    }
+    rows.forEach((r, i) => {
+      const y = r.k.slice(0, 4), mo = +r.k.slice(5, 7), py = i > 0 ? rows[i - 1].k.slice(0, 4) : '';
+      g += '<text x="' + X(i) + '" y="' + (H - B + 14) + '" text-anchor="middle" font-size="10" style="fill:var(--ink)">' + faNum(mo) + '</text>';
+      if (y !== py) g += '<text x="' + X(i) + '" y="' + (H - B + 27) + '" text-anchor="middle" font-size="9" style="fill:var(--muted)">' + faNum(y) + '</text>';
+    });
+    [['p', '--accent', -8], ['q', '--accent2', 15]].forEach(sr => {
+      let d = '', pts = '';
+      rows.forEach((r, i) => {
+        if (!r[sr[0]].length) return;
+        const a = avg(r[sr[0]]), x = X(i), y = Y(a);
+        d += (d ? ' L' : 'M') + x.toFixed(1) + ',' + y.toFixed(1);
+        pts += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="3.5" style="fill:var(' + sr[1] + ')"/>' +
+               '<text x="' + x.toFixed(1) + '" y="' + (y + sr[2]).toFixed(1) + '" text-anchor="middle" font-size="9" style="fill:var(' + sr[1] + ')">' + f1(a) + '</text>';
+      });
+      if (d) g += '<path d="' + d + '" fill="none" stroke-width="2" style="stroke:var(' + sr[1] + ')"/>' + pts;
+    });
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="روند میانگین امتیاز ماهانه" style="max-width:100%;height:auto">' + g + '</svg>';
+  }
+  function dl(cur, prev) {
+    if (!cur.length || !prev || !prev.length) return '';
+    const d = avg(cur) - avg(prev);
+    if (Math.abs(d) < 0.05) return ' <span class="muted">＝</span>';
+    return d > 0 ? ' <span class="up">▲' + f1(d) + '</span>' : ' <span class="down">▼' + f1(-d) + '</span>';
+  }
+  function renderSurvey() {
+    const P = SURVEYS.map(i => rt(i.productRating)).filter(Boolean), Q = SURVEYS.map(i => rt(i.installerRating)).filter(Boolean);
+    $('svAvgP').textContent = P.length ? f1(avg(P)) : '—';
+    $('svAvgQ').textContent = Q.length ? f1(avg(Q)) : '—';
+    $('svCount').textContent = faNum(SURVEYS.length);
+    const rows = monthRows();
+    if (!rows.length) { $('svChart').innerHTML = '<p class="muted">هنوز داده‌ای برای نمودار نیست.</p>'; $('svMonths').innerHTML = ''; }
+    else {
+      $('svChart').innerHTML = trendSvg(rows);
+      const desc = rows.slice().reverse();
+      $('svMonths').innerHTML = desc.map((r, idx) => {
+        const pv = desc[idx + 1];
+        return '<div class="it"><b>' + esc(MONTHS[+r.k.slice(5, 7) - 1] + ' ' + faNum(r.k.slice(0, 4))) + ' <small>(' + faNum(r.n) + ' نظر)</small></b>' +
+          '<span>محصول: ' + (r.p.length ? f1(avg(r.p)) : '—') + dl(r.p, pv && pv.p) + '</span>' +
+          '<span>کارشناس: ' + (r.q.length ? f1(avg(r.q)) : '—') + dl(r.q, pv && pv.q) + '</span></div>';
+      }).join('');
+    }
+    renderSvList();
+  }
+  function renderSvList() {
+    const f = $('svFilter').value;
+    let items = SURVEYS.slice().sort((a, b) => normD(b.date || '').localeCompare(normD(a.date || '')));
+    if (f === 'text') items = items.filter(i => String(i.comment || '').trim());
+    if (f === 'low') items = items.filter(i => { const p = rt(i.productRating), q = rt(i.installerRating); return (p && p <= 2) || (q && q <= 2); });
+    if (!items.length) { $('svList').innerHTML = '<p class="muted">موردی پیدا نشد.</p>'; return; }
+    $('svList').innerHTML = items.slice(0, 100).map(i =>
+      '<div class="it"><b>' + esc(fullName(i)) + '</b>' +
+      '<small>' + esc(faNum(normD(i.date || '') || i.date || '')) + (i.phone ? ' — ' + esc(i.phone) : '') + '</small>' +
+      '<span class="starsline">محصول: ' + starTxt(rt(i.productRating)) + '</span>' +
+      '<span class="starsline">کارشناس: ' + starTxt(rt(i.installerRating)) + '</span>' +
+      (String(i.comment || '').trim() ? '<span class="cmt">' + esc(i.comment) + '</span>' : '') + '</div>').join('');
+  }
+  $('svFilter').addEventListener('change', renderSvList);
+
+  /* ===== بازیابی نشست قبلی ===== */
+  if (CUST) startCustomer();
+  else try { const s = JSON.parse(localStorage.getItem('sess') || 'null'); if (s && s.t) startSession({ token: s.t, username: s.u, role: s.r }); } catch (e) {}
+})();
+</script>
+</body>
+</html>
