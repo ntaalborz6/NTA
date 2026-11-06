@@ -1887,7 +1887,7 @@ module.exports = QRCode;
   let TOKEN = '', USER = '', ROLE = '';
   function post(body) {
     return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
-      .then(r => r.json()).then(res => { if (!res.ok && res.expired) endSession(); return res; });
+      .then(r => r.json()).then(res => { if (!res.ok && res.expired && !CUST) endSession(); return res; });
   }
   function api(action, data) { return post(Object.assign({ action: action, token: TOKEN }, data || {})); }
   const say = (id, t, cls) => { const e = $(id); e.textContent = t; e.className = 'msg ' + (cls || ''); };
@@ -2335,7 +2335,7 @@ module.exports = QRCode;
       if (o.dataset.ready) return;
       h.textContent = 'در حال بارگذاری آموزش…';
       post({ action: 'getGuide' }).then(r => {
-        if (!r.ok) { h.textContent = r.error || 'فایل آموزش هنوز بارگذاری نشده است.'; return; }
+        if (!r.ok) { h.textContent = r.expired ? 'فایل آموزش هنوز در دسترس نیست.' : (r.error || 'فایل آموزش هنوز بارگذاری نشده است.'); return; }
         o.href = r.view; d.href = r.download; o.dataset.ready = '1'; d.dataset.ready = '1'; h.textContent = '';
       }).catch(() => { h.textContent = 'ارتباط با سرور برقرار نشد'; });
     }
